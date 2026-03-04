@@ -3,197 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEEL CENTER ERP - FULL SYSTEM</title>
+    <title>STEEL CENTER ERP V9.0 - PROFESSIONAL SYSTEM</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        :root { --p: #1a202c; --s: #2d3748; --acc: #f6ad55; --bg: #f7fafc; --brdr: #e2e8f0; --green: #38a169; --red: #e53e3e; --blue: #3182ce; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
-        
-        /* Login */
-        #login-screen { position: fixed; inset: 0; background: var(--p); display: flex; align-items: center; justify-content: center; z-index: 9999; color: white; flex-direction: column; }
-        .login-box { background: #2d3748; padding: 40px; border-radius: 15px; text-align: center; border: 1px solid var(--acc); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .login-box input { padding: 15px; font-size: 24px; text-align: center; border-radius: 8px; width: 160px; margin-bottom: 20px; border: none; outline: none; }
+        :root {
+            --p: #1a202c;
+            --s: #2d3748;
+            --acc: #f6ad55;
+            --bg: #f7fafc;
+            --brdr: #e2e8f0;
+            --green: #38a169;
+            --red: #e53e3e;
+            --blue: #3182ce;
+            --white: #ffffff;
+        }
 
-        /* Sidebar */
-        .sidebar { width: 260px; background: var(--p); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 25px; background: #2d3748; text-align: center; border-bottom: 3px solid var(--acc); font-weight: bold; font-size: 20px; }
-        nav { flex: 1; padding: 10px 0; overflow-y: auto; }
-        nav a { display: block; padding: 15px 20px; color: #cbd5e0; text-decoration: none; cursor: pointer; border-left: 4px solid transparent; transition: 0.3s; }
-        nav a:hover, nav a.active { background: #4a5568; color: white; border-left-color: var(--acc); }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: var(--bg);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* Main Content */
-        .main { flex: 1; padding: 25px; overflow-y: auto; box-sizing: border-box; }
-        .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--brdr); margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        
-        /* Dashboard Stats */
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-box { padding: 20px; border-radius: 10px; color: white; position: relative; overflow: hidden; }
-        .stat-box small { font-size: 11px; text-transform: uppercase; opacity: 0.8; font-weight: bold; }
-        .stat-box span { display: block; font-size: 24px; font-weight: 800; margin-top: 5px; font-family: 'Courier New', monospace; }
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--p);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            flex-direction: column;
+        }
 
-        /* Forms */
-        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--brdr); }
-        input, select { padding: 12px; border: 1px solid var(--brdr); border-radius: 6px; outline: none; font-size: 14px; }
-        input:focus { border-color: var(--blue); }
-        .btn-add { background: var(--green); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-add:hover { filter: brightness(1.1); }
+        .login-box {
+            background: #2d3748;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid var(--acc);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .login-box h1 { margin-bottom: 20px; letter-spacing: 2px; }
+
+        .login-box input {
+            padding: 15px;
+            font-size: 28px;
+            text-align: center;
+            border-radius: 10px;
+            width: 200px;
+            margin-bottom: 25px;
+            border: none;
+            outline: none;
+            background: #edf2f7;
+            color: #1a202c;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background: var(--p);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            background: #2d3748;
+            text-align: center;
+            border-bottom: 4px solid var(--acc);
+            font-weight: bold;
+            font-size: 22px;
+            text-transform: uppercase;
+        }
+
+        nav { flex: 1; padding: 20px 0; overflow-y: auto; }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            padding: 18px 25px;
+            color: #cbd5e0;
+            text-decoration: none;
+            cursor: pointer;
+            border-left: 5px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        nav a:hover, nav a.active {
+            background: #4a5568;
+            color: white;
+            border-left-color: var(--acc);
+            padding-left: 35px;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            background: var(--bg);
+        }
+
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--brdr);
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--s);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- STATS GRID --- */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            padding: 25px;
+            border-radius: 12px;
+            color: white;
+            transition: transform 0.2s;
+        }
+        .stat-box:hover { transform: translateY(-5px); }
+
+        .stat-box small { font-size: 12px; text-transform: uppercase; opacity: 0.9; font-weight: bold; }
+        .stat-box span { display: block; font-size: 26px; font-weight: 800; margin-top: 8px; font-family: 'Courier New', monospace; }
+
+        /* --- FORMS & INPUTS --- */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--brdr);
+        }
+
+        input, select {
+            padding: 12px 15px;
+            border: 1px solid var(--brdr);
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+        input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1); }
+
+        .btn-add {
+            background: var(--green);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .btn-add:hover { filter: brightness(1.1); box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3); }
+
+        /* --- TABLES --- */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th {
+            background: #edf2f7;
+            padding: 15px;
+            text-align: left;
+            font-size: 12px;
+            color: #4a5568;
+            border-bottom: 2px solid var(--brdr);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        td { padding: 15px; border-bottom: 1px solid var(--brdr); font-size: 15px; color: var(--s); }
+
+        tr:hover { background-color: #fcfcfc; }
         
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-        th { background: #f8fafc; padding: 12px; text-align: left; font-size: 11px; color: #718096; border-bottom: 2px solid var(--brdr); text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid var(--brdr); font-size: 14px; color: var(--s); }
-        
-        /* Special Row Styles */
         .row-paid { background-color: #f0fff4 !important; color: #276749 !important; font-weight: bold; }
-        .row-paid td { border-bottom: 1px solid #c6f6d5; }
-        
         .hidden { display: none !important; }
-        .del-btn { color: var(--red); cursor: pointer; border: 1px solid var(--red); background: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .del-btn:hover { background: var(--red); color: white; }
         
-        .status-btn { background: var(--blue); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .del-btn {
+            color: var(--red);
+            cursor: pointer;
+            border: 1px solid var(--red);
+            background: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .del-btn:hover { background: var(--red); color: white; }
+
+        .status-btn {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* --- FLEX LAYOUTS --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 1000px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .scroll-box { max-height: 400px; overflow-y: auto; border: 1px solid var(--brdr); border-radius: 8px; }
+
+        .archive-item {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--brdr);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
     <div class="login-box">
-        <h1 style="margin:0 0 10px 0;">STEEL CENTER</h1>
-        <p>Xavfsizlik parolini kiriting:</p>
-        <input type="password" id="pass-input" maxlength="4" placeholder="****">
-        <button class="btn-add" onclick="checkPass()" style="width: 100%; font-size: 18px;">KIRISH</button>
+        <h1>STEEL CENTER</h1>
+        <p style="color: #cbd5e0; margin-bottom: 20px;">Xavfsizlik tizimi v9.0</p>
+        <input type="password" id="pass-input" maxlength="4" placeholder="****" autofocus>
+        <button class="btn-add" onclick="checkPass()" style="width: 100%; height: 55px; font-size: 20px;">TIZIMGA KIRISH</button>
     </div>
 </div>
 
 <div id="app-ui" class="hidden" style="display: flex; width: 100%; height: 100vh;">
     <div class="sidebar">
-        <div class="sidebar-header">SC MANAGER V6.0</div>
+        <div class="sidebar-header">SC MANAGER V9.0</div>
         <nav>
-            <a onclick="route('stats')" id="m-stats" class="active">📊 Statistika</a>
-            <a onclick="route('ombor')" id="m-ombor">📦 Ombor (Kirim)</a>
+            <a onclick="route('stats')" id="m-stats" class="active">📊 Statistika & Balans</a>
+            <a onclick="route('ombor')" id="m-ombor">📦 Ombor (Zaxira)</a>
             <a onclick="route('savdo')" id="m-savdo">💰 Naqd Savdo</a>
             <a onclick="route('nasiya')" id="m-nasiya">🤝 Nasiya Daftari</a>
             <a onclick="route('ishchilar')" id="m-ishchilar">👥 Ishchilar Maoshi</a>
-            <a onclick="route('xarajat')" id="m-xarajat">📉 Kunlik Xarajat</a>
-            <a onclick="route('arxiv')" id="m-arxiv">📚 Hisobotlar</a>
+            <a onclick="route('xarajat')" id="m-xarajat">📉 Kunlik Chiqimlar</a>
+            <a onclick="route('arxiv')" id="m-arxiv">📚 Hisobotlar Arvixi</a>
         </nav>
-        <button onclick="archiveDay()" style="background:var(--red); color:white; padding:15px; margin:15px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);">🔒 KUNNI YOPISH</button>
+        <button onclick="archiveDay()" style="background:var(--red); color:white; padding:20px; margin:20px; border:none; border-radius:12px; cursor:pointer; font-weight:bold; box-shadow: 0 6px 15px rgba(229, 62, 62, 0.3);">🔒 KUNNI YOPISH</button>
     </div>
 
     <div class="main">
+        
         <div id="sec-stats" class="card">
-            <h3>Asosiy Ko'rsatkichlar</h3>
+            <h3>Asosiy Moliyaviy Holat</h3>
             <div class="stat-grid">
-                <div class="stat-box" style="background: #2c5282;"><small>💵 Naqd Kassa</small><span id="st-kassa">0</span></div>
-                <div class="stat-box" style="background: var(--blue);"><small>🏗️ Ombor Qiymati</small><span id="st-ombor">0</span></div>
-                <div class="stat-box" style="background: var(--acc);"><small>📝 Jami Nasiyalar</small><span id="st-nasiya">0</span></div>
-                <div class="stat-box" style="background: #805ad5;"><small>📈 Bugun Sof Foyda</small><span id="st-foyda">0</span></div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #2c5282, #2b6cb0);">
+                    <small>💵 Naqd Kassa</small>
+                    <span id="st-kassa">0</span>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #3182ce, #4299e1);">
+                    <small>🏗️ Ombor Qiymati</small>
+                    <span id="st-ombor">0</span>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #d69e2e, #f6ad55);">
+                    <small>📝 Jami Nasiyalar</small>
+                    <span id="st-nasiya">0</span>
+                </div>
+                <div class="stat-box" style="background: linear-gradient(135deg, #6b46c1, #805ad5);">
+                    <small>📈 Bugungi Foyda</small>
+                    <span id="st-foyda">0</span>
+                </div>
             </div>
             
             <h4>🏗️ Ombor Qoldig'i (Astatka)</h4>
-            <table>
-                <thead><tr><th>Mahsulot</th><th>Vazn (kg)</th><th>Tannarx</th><th>Jami Qiymat</th></tr></thead>
-                <tbody id="astatka-body"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Mahsulot</th><th>Vazn (kg)</th><th>Tannarx</th><th>Jami Qiymat</th></tr></thead>
+                    <tbody id="astatka-body"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="sec-ombor" class="card hidden">
-            <h3>📦 Omborga Kirim Qilish</h3>
+            <h3>📦 Omborga Mahsulot Qo'shish</h3>
             <div class="form-row">
                 <input type="text" id="p_nomi" placeholder="Mahsulot nomi">
                 <input type="number" id="p_vazni" placeholder="Vazni (kg)">
                 <input type="number" id="p_narxi" placeholder="Tannarxi (1kg)">
-                <button class="btn-add" onclick="addOmbor()">Omborga Qo'shish</button>
+                <button class="btn-add" onclick="addOmbor()">Bazaga Qo'shish</button>
             </div>
-            <table>
-                <thead><tr><th>Mahsulot Nomi</th><th>Vazni</th><th>Tannarx</th><th>Amal</th></tr></thead>
-                <tbody id="body-ombor"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Nomi</th><th>Vazni (kg)</th><th>Tannarx (so'm)</th><th>Amal</th></tr></thead>
+                    <tbody id="body-ombor"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="sec-savdo" class="card hidden">
-            <h3>💰 Naqd Savdo (Sotuv)</h3>
+            <h3>💰 Sotuv Bo'limi</h3>
             <div class="form-row">
                 <select id="s_select"></select>
                 <input type="number" id="s_vazni" placeholder="Sotuv Vazni">
                 <input type="number" id="s_narxi" placeholder="Sotuv Narxi">
-                <button class="btn-add" onclick="addSavdo()">Sotish</button>
+                <button class="btn-add" onclick="addSavdo()">Sotuvni Yakunlash</button>
             </div>
-            <table>
-                <thead><tr><th>Nomi</th><th>Vazn</th><th>Sotuv Narxi</th><th>Jami</th><th>Foyda</th><th>Amal</th></tr></thead>
-                <tbody id="body-savdo"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Nomi</th><th>Vazn</th><th>Sotuv</th><th>Jami</th><th>Foyda</th><th>Amal</th></tr></thead>
+                    <tbody id="body-savdo"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="sec-nasiya" class="card hidden">
-            <h3>🤝 Nasiya Berish</h3>
+            <h3>🤝 Nasiya Berish Bo'limi</h3>
             <div class="form-row">
                 <input type="text" id="n_ism" placeholder="Mijoz ismi">
                 <select id="n_select"></select>
                 <input type="number" id="n_vazn" placeholder="Vazni">
-                <input type="number" id="n_pul" placeholder="Jami Qarz Summasi">
+                <input type="number" id="n_pul" placeholder="Summa">
                 <button class="btn-add" onclick="addNasiya()" style="background:var(--blue)">Nasiyaga Berish</button>
             </div>
-            <table>
-                <thead><tr><th>Mijoz</th><th>Narsa</th><th>Vazn</th><th>Summa</th><th>Holat</th><th>Amal</th></tr></thead>
-                <tbody id="body-nasiya"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Mijoz</th><th>Narsa</th><th>Vazn</th><th>Summa</th><th>Holat</th><th>Amal</th></tr></thead>
+                    <tbody id="body-nasiya"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="sec-ishchilar" class="card hidden">
-            <h3>👥 Ishchilar Maoshi (Kassadan)</h3>
+            <h3>👥 Ishchilar Maoshi va Hisob-kitobi</h3>
             <div class="form-row">
                 <input type="text" id="i_ism" placeholder="Ishchi ismi">
-                <input type="number" id="i_pul" placeholder="To'lov summasi">
+                <input type="number" id="i_pul" placeholder="Berilayotgan summa">
                 <button class="btn-add" onclick="addIshchi()">To'lovni Tasdiqlash</button>
             </div>
-            <table>
-                <thead><tr><th>Sana</th><th>Ishchi</th><th>Summa</th><th>Amal</th></tr></thead>
-                <tbody id="body-ishchilar"></tbody>
-            </table>
+            
+            <div class="grid-2">
+                <div>
+                    <h4>📊 Umumiy Hisob (Kim qancha oldi)</h4>
+                    <div class="scroll-box">
+                        <table>
+                            <thead><tr><th>Ishchi ismi</th><th>Jami Olgan Summasi</th></tr></thead>
+                            <tbody id="body-ishchi-jami"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h4>📜 To'lovlar Tarixi (O'chib ketmaydi)</h4>
+                    <div class="scroll-box">
+                        <table>
+                            <thead><tr><th>Sana</th><th>Ism</th><th>Summa</th><th>Amal</th></tr></thead>
+                            <tbody id="body-ishchilar-tarix"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="sec-xarajat" class="card hidden">
-            <h3>📉 Kunlik Xarajatlar (Kassadan)</h3>
+            <h3>📉 Kunlik Boshqa Xarajatlar</h3>
             <div class="form-row">
                 <input type="text" id="x_nima" placeholder="Xarajat maqsadi">
-                <input type="number" id="x_pul" placeholder="Summa">
-                <button class="btn-add" onclick="addXarajat()">Saqlash</button>
+                <input type="number" id="x_pul" placeholder="Summasi">
+                <button class="btn-add" onclick="addXarajat()">Xarajatni Yozish</button>
             </div>
-            <table>
-                <thead><tr><th>Maqsad</th><th>Summa</th><th>Amal</th></tr></thead>
-                <tbody id="body-xarajat"></tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Maqsad</th><th>Summa</th><th>Amal</th></tr></thead>
+                    <tbody id="body-xarajat"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="sec-arxiv" class="card hidden">
-            <h3>📚 Yopilgan Kunlar Hisoboti</h3>
+            <h3>📚 Arxivlangan Kunlik Hisobotlar</h3>
             <div id="arxiv-list"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // INITIAL DATA LOAD
-    let state = JSON.parse(localStorage.getItem('steel_erp_v6_db')) || { 
-        ombor: [], savdo: [], nasiya: [], ishchilar: [], xarajat: [], kassa: 0 
+    /* --- MA'LUMOTLAR OMBORI --- */
+    let state = JSON.parse(localStorage.getItem('steel_erp_v9_db')) || { 
+        ombor: [], 
+        savdo: [], 
+        nasiya: [], 
+        xarajat: [], 
+        kassa: 0,
+        salary_history: [] // Ishchilar uchun doimiy arxiv
     };
 
     function sync() {
-        localStorage.setItem('steel_erp_v6_db', JSON.stringify(state));
+        localStorage.setItem('steel_erp_v9_db', JSON.stringify(state));
         render();
     }
 
     const fmt = (n) => new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0));
 
-    // LOGIN & ROUTING
+    /* --- LOGIN VA NAVIGATION --- */
     function checkPass() {
-        if(document.getElementById('pass-input').value === "0303") {
+        const pass = document.getElementById('pass-input').value;
+        if(pass === "0303") {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-ui').classList.remove('hidden');
             render();
-        } else { alert("Xato!"); }
+        } else {
+            alert("Xavfsizlik paroli noto'g'ri!");
+        }
     }
+
+    // Parolni Enter bilan kiritish
+    document.getElementById('pass-input').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') checkPass();
+    });
 
     function route(id) {
         document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
@@ -203,17 +452,18 @@
         if(id === 'arxiv') renderArxiv();
     }
 
-    // 1. OMBOR FUNKSIYALARI
+    /* --- OMBOR FUNKSIYALARI --- */
     function addOmbor() {
         const nomi = document.getElementById('p_nomi').value.trim();
         const v = parseFloat(document.getElementById('p_vazni').value) || 0;
         const n = parseFloat(document.getElementById('p_narxi').value) || 0;
-        if(!nomi || v <= 0) return;
         
-        let existing = state.ombor.find(x => x.nomi.toLowerCase() === nomi.toLowerCase());
-        if(existing) {
-            existing.vazni += v;
-            existing.narxi = n;
+        if(!nomi || v <= 0) return alert("Ma'lumotlarni to'liq kiriting!");
+        
+        let ex = state.ombor.find(x => x.nomi.toLowerCase() === nomi.toLowerCase());
+        if(ex) {
+            ex.vazni += v;
+            ex.narxi = n;
         } else {
             state.ombor.push({ nomi, vazni: v, narxi: n });
         }
@@ -221,38 +471,49 @@
         ['p_nomi','p_vazni','p_narxi'].forEach(i => document.getElementById(i).value = '');
     }
 
-    // 2. SAVDO (KASSAGA PUL QO'SHADI, OMBORDAN AYIRADI)
+    /* --- SAVDO FUNKSIYALARI --- */
     function addSavdo() {
         const idx = document.getElementById('s_select').value;
         const v = parseFloat(document.getElementById('s_vazni').value) || 0;
         const n = parseFloat(document.getElementById('s_narxi').value) || 0;
-        if(idx === "" || v <= 0) return;
+        
+        if(idx === "" || v <= 0 || n <= 0) return alert("Sotuv ma'lumotlarini kiriting!");
         
         const prod = state.ombor[idx];
-        if(prod.vazni < v) return alert("Omborda yetarli mahsulot yo'q!");
+        if(prod.vazni < v) return alert("Omborda yetarli mahsulot yo'q! Qoldiq: " + prod.vazni + " kg");
 
         const jami = v * n;
         const foyda = (n - prod.narxi) * v;
 
-        state.savdo.push({ nomi: prod.nomi, vazni: v, tan: prod.narxi, sotuv: n, jami: jami, foyda: foyda });
+        state.savdo.push({ 
+            nomi: prod.nomi, 
+            vazni: v, 
+            tan: prod.narxi, 
+            sotuv: n, 
+            jami: jami, 
+            foyda: foyda 
+        });
+        
         state.kassa += jami;
         prod.vazni -= v;
         sync();
         document.getElementById('s_vazni').value = '';
+        document.getElementById('s_narxi').value = '';
     }
 
-    // 3. NASIYA (OMBORDAN AYIRADI, FAQAT YOPILSA KASSAGA QO'SHADI)
+    /* --- NASIYA FUNKSIYALARI --- */
     function addNasiya() {
         const ism = document.getElementById('n_ism').value.trim();
         const idx = document.getElementById('n_select').value;
         const v = parseFloat(document.getElementById('n_vazn').value) || 0;
         const pul = parseFloat(document.getElementById('n_pul').value) || 0;
         
-        if(!ism || idx === "" || v <= 0) return;
+        if(!ism || idx === "" || v <= 0) return alert("Nasiya ma'lumotlarini to'liq yozing!");
+        
         const prod = state.ombor[idx];
         if(prod.vazni < v) return alert("Omborda mahsulot yetarli emas!");
 
-        state.nasiya.push({ ism, nima: prod.nomi, vazn: v, pul, paid: false });
+        state.nasiya.push({ ism, nima: prod.nomi, vazn: v, pul: pul, paid: false });
         prod.vazni -= v;
         sync();
         ['n_ism','n_vazn','n_pul'].forEach(i => document.getElementById(i).value = '');
@@ -267,52 +528,72 @@
         }
     }
 
-    // 4. CHIQIMLAR (KASSADAN AYIRADI)
+    /* --- ISHCHILAR BO'LIMI (TUG'IRLANGAN) --- */
     function addIshchi() {
         const ism = document.getElementById('i_ism').value.trim();
         const pul = parseFloat(document.getElementById('i_pul').value) || 0;
-        if(!ism || pul <= 0) return;
-        if(pul > state.kassa) return alert("Kassada yetarli mablag' yo'q!");
+        
+        if(!ism || pul <= 0) return alert("Ism va summani kiriting!");
+        if(pul > state.kassa) return alert("Kassada yetarli mablag' yo'q! Kassa: " + fmt(state.kassa));
 
-        state.ishchilar.push({ date: new Date().toLocaleDateString(), ism, pul });
+        state.salary_history.push({ 
+            date: new Date().toLocaleDateString(), 
+            ism: ism, 
+            pul: pul 
+        });
+        
         state.kassa -= pul;
         sync();
-        document.getElementById('i_ism').value = ''; document.getElementById('i_pul').value = '';
+        document.getElementById('i_ism').value = '';
+        document.getElementById('i_pul').value = '';
     }
 
+    /* --- XARAJAT FUNKSIYALARI --- */
     function addXarajat() {
         const nima = document.getElementById('x_nima').value.trim();
         const pul = parseFloat(document.getElementById('x_pul').value) || 0;
-        if(!nima || pul <= 0) return;
-        if(pul > state.kassa) return alert("Kassada yetarli mablag' yo'q!");
+        
+        if(!nima || pul <= 0) return alert("Xarajat maqsadi va summasini yozing!");
+        if(pul > state.kassa) return alert("Kassada yetarli pul yo'q!");
 
         state.xarajat.push({ nima, pul });
         state.kassa -= pul;
         sync();
-        document.getElementById('x_nima').value = ''; document.getElementById('x_pul').value = '';
+        document.getElementById('x_nima').value = '';
+        document.getElementById('x_pul').value = '';
     }
 
-    // GENERAL DELETE
+    /* --- O'CHIRISH (GENERAL DELETE) --- */
     function del(type, idx) {
-        if(confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-            state[type].splice(idx, 1);
-            sync();
+        if(!confirm("Ushbu ma'lumot o'chirilsinmi?")) return;
+        
+        // Agar ishchi oyligi o'chirilsa, kassa qayta tiklanadi
+        if(type === 'salary_history') {
+            state.kassa += state.salary_history[idx].pul;
         }
+        // Agar savdo o'chirilsa, kassa va ombor qaytishi kerak (ixtiyoriy, lekin kassa muhim)
+        if(type === 'savdo') {
+            state.kassa -= state.savdo[idx].jami;
+        }
+        
+        state[type].splice(idx, 1);
+        sync();
     }
 
-    // RENDER ALL TABLES
+    /* --- RENDER (HAMMA JADVALLARNI YANGILASH) --- */
     function render() {
+        // Balanslarni hisoblash
         let tOmborVal = 0; state.ombor.forEach(i => tOmborVal += (i.vazni * i.narxi));
         let tNasiyaVal = 0; state.nasiya.forEach(i => { if(!i.paid) tNasiyaVal += i.pul; });
         let tFoyda = 0; state.savdo.forEach(i => tFoyda += i.foyda);
 
-        // Stats
+        // Stats UI
         document.getElementById('st-kassa').innerText = fmt(state.kassa);
         document.getElementById('st-ombor').innerText = fmt(tOmborVal);
         document.getElementById('st-nasiya').innerText = fmt(tNasiyaVal);
         document.getElementById('st-foyda').innerText = fmt(tFoyda);
 
-        // Astatka
+        // Astatka Table
         const bA = document.getElementById('astatka-body'); bA.innerHTML = '';
         state.ombor.forEach(i => {
             if(i.vazni > 0) bA.innerHTML += `<tr><td><b>${i.nomi}</b></td><td>${i.vazni} kg</td><td>${fmt(i.narxi)}</td><td>${fmt(i.vazni*i.narxi)}</td></tr>`;
@@ -326,22 +607,35 @@
         const bS = document.getElementById('body-savdo'); bS.innerHTML = '';
         state.savdo.forEach((i, idx) => bS.innerHTML += `<tr><td>${i.nomi}</td><td>${i.vazni}</td><td>${fmt(i.sotuv)}</td><td>${fmt(i.jami)}</td><td style="color:green; font-weight:bold;">+${fmt(i.foyda)}</td><td><button class="del-btn" onclick="del('savdo',${idx})">X</button></td></tr>`);
 
-        // Nasiya Table (COLOR LOGIC)
+        // Nasiya Table
         const bN = document.getElementById('body-nasiya'); bN.innerHTML = '';
         state.nasiya.forEach((i, idx) => {
             const rowClass = i.paid ? 'row-paid' : '';
-            const action = i.paid ? '✅ To\'langan' : `<button class="status-btn" onclick="closeNasiya(${idx})">Qabul qilish</button>`;
+            const action = i.paid ? '✅' : `<button class="status-btn" onclick="closeNasiya(${idx})">Pulni olish</button>`;
             bN.innerHTML += `<tr class="${rowClass}"><td>${i.ism}</td><td>${i.nima}</td><td>${i.vazn} kg</td><td>${fmt(i.pul)}</td><td>${action}</td><td><button class="del-btn" onclick="del('nasiya',${idx})">X</button></td></tr>`;
         });
 
-        // Ishchi & Xarajat
-        const bI = document.getElementById('body-ishchilar'); bI.innerHTML = '';
-        state.ishchilar.forEach((i, idx) => bI.innerHTML += `<tr><td>${i.date}</td><td>${i.ism}</td><td>${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('ishchilar',${idx})">X</button></td></tr>`);
+        // ISHCHILAR RENDER (SIZNING ASOSIY TALABINGIZ)
+        const bIT = document.getElementById('body-ishchilar-tarix'); bIT.innerHTML = '';
+        const jamiIshchiMap = {};
+        
+        // Tarixni teskari (yangi birinchi) ko'rsatish
+        [...state.salary_history].reverse().forEach((i, idx) => {
+            const realIdx = state.salary_history.length - 1 - idx;
+            bIT.innerHTML += `<tr><td>${i.date}</td><td>${i.ism}</td><td>${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('salary_history',${realIdx})">X</button></td></tr>`;
+            jamiIshchiMap[i.ism] = (jamiIshchiMap[i.ism] || 0) + i.pul;
+        });
 
+        const bIJ = document.getElementById('body-ishchi-jami'); bIJ.innerHTML = '';
+        for(let ism in jamiIshchiMap) {
+            bIJ.innerHTML += `<tr><td><b>${ism}</b></td><td style="color:var(--blue); font-weight:bold;">${fmt(jamiIshchiMap[ism])}</td></tr>`;
+        }
+
+        // Xarajat Table
         const bX = document.getElementById('body-xarajat'); bX.innerHTML = '';
         state.xarajat.forEach((i, idx) => bX.innerHTML += `<tr><td>${i.nima}</td><td>${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('xarajat',${idx})">X</button></td></tr>`);
 
-        // Update Selects
+        // Dropdownlarni yangilash
         const sSel = document.getElementById('s_select'); 
         const nSel = document.getElementById('n_select');
         sSel.innerHTML = nSel.innerHTML = '<option value="">Mahsulotni tanlang...</option>';
@@ -353,56 +647,77 @@
         });
     }
 
-    // 5. KUNNI YOPISH & ARXIV
+    /* --- KUNNI YOPISH VA ARXIVLASH --- */
     function archiveDay() {
-        if(!confirm("Diqqat! Savdo, Xarajat va Ishchi to'lovlari arxivga olinadi va ro'yxat tozalanadi. Kassa balansi va Ombor qoldig'i saqlanadi. Tasdiqlaysizmi?")) return;
+        if(state.savdo.length === 0 && state.xarajat.length === 0) return alert("Bugun hali savdo qilinmadi!");
         
-        let archives = JSON.parse(localStorage.getItem('steel_erp_archives')) || [];
+        if(!confirm("Diqqat! Savdo va Chiqimlar tozalanadi. Ishchilar oyligi tarixi va Kassa qoldig'i saqlanadi. Tasdiqlaysizmi?")) return;
+        
+        let archives = JSON.parse(localStorage.getItem('steel_erp_archives_v9')) || [];
+        
         archives.push({
             date: new Date().toLocaleString(),
-            kassa: state.kassa,
+            kassa_at_close: state.kassa,
             savdolar: [...state.savdo],
             xarajatlar: [...state.xarajat],
-            maoshlar: [...state.ishchilar]
+            foyda: state.savdo.reduce((a, b) => a + b.foyda, 0)
         });
-        localStorage.setItem('steel_erp_archives', JSON.stringify(archives));
+        
+        localStorage.setItem('steel_erp_archives_v9', JSON.stringify(archives));
 
-        // Ro'yxatlarni tozalash, Kassa va Omborga tegmaslik
+        // Faqat kunlik o'zgaruvchan narsalarni tozalaymiz
         state.savdo = [];
-        state.ishchilar = [];
         state.xarajat = [];
+        // Ishchilar (salary_history) ga tegmaymiz - u doimiy qoladi!
+        
         sync();
-        alert("Kun yopildi va arxivlandi!");
+        alert("Bugungi ish kuni muvaffaqiyatli yopildi va arxivlandi.");
         route('stats');
     }
 
+    /* --- ARXIVNI RENDER QILISH --- */
     function renderArxiv() {
         const container = document.getElementById('arxiv-list');
-        const archives = JSON.parse(localStorage.getItem('steel_erp_archives')) || [];
-        container.innerHTML = archives.length ? '' : '<p style="text-align:center; padding:20px; color:#aaa;">Arxiv bo\'sh</p>';
+        const archives = JSON.parse(localStorage.getItem('steel_erp_archives_v9')) || [];
+        
+        container.innerHTML = archives.length ? '' : '<p style="text-align:center; padding:50px; color:#aaa;">Hozircha arxivlar mavjud emas.</p>';
         
         [...archives].reverse().forEach((a, idx) => {
+            const realIdx = archives.length - 1 - idx;
             container.innerHTML += `
-                <div style="background:white; padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--brdr);">
-                    <span>📅 <b>${a.date}</b> | Kassada bo'lgan: <b>${fmt(a.kassa)}</b></span>
-                    <button onclick="downloadExcel(${archives.length - 1 - idx})" style="padding:8px 15px; background:var(--s); color:white; border:none; border-radius:5px; cursor:pointer;">📥 Excel Yuklash</button>
+                <div class="archive-item">
+                    <div>
+                        <span style="font-weight:bold; color:var(--p);">📅 ${a.date}</span>
+                        <span style="margin-left:15px; color:var(--green);">Foyda: ${fmt(a.foyda)}</span>
+                        <span style="margin-left:15px; color:var(--blue);">Kassa: ${fmt(a.kassa_at_close)}</span>
+                    </div>
+                    <button onclick="downloadExcel(${realIdx})" style="padding:10px 18px; background:var(--s); color:white; border:none; border-radius:8px; cursor:pointer; font-size:14px;">📥 Excel yuklash</button>
                 </div>`;
         });
     }
 
+    /* --- EXCEL EKSPORT --- */
     function downloadExcel(index) {
-        const archives = JSON.parse(localStorage.getItem('steel_erp_archives'));
-        const doc = archives[index];
+        const archives = JSON.parse(localStorage.getItem('steel_erp_archives_v9'));
+        const data = archives[index];
         const wb = XLSX.utils.book_new();
 
-        const summary = [["Sana", doc.date], ["Yopilishdagi Kassa", doc.kassa], [], ["SAVDOLAR"]];
-        doc.savdolar.forEach(s => summary.push([s.nomi, s.vazni + "kg", s.jami, "Foyda: " + s.foyda]));
-        
-        const ws = XLSX.utils.aoa_to_sheet(summary);
-        XLSX.utils.book_append_sheet(wb, ws, "Hisobot");
-        XLSX.writeFile(wb, `Steel_Center_${doc.date.split(',')[0]}.xlsx`);
+        // Savdolar varag'i
+        const savdoData = [["Mahsulot", "Vazn (kg)", "Tannarx", "Sotuv Narxi", "Jami", "Foyda"]];
+        data.savdolar.forEach(s => savdoData.push([s.nomi, s.vazni, s.tan, s.sotuv, s.jami, s.foyda]));
+        const wsSavdo = XLSX.utils.aoa_to_sheet(savdoData);
+        XLSX.utils.book_append_sheet(wb, wsSavdo, "Savdolar");
+
+        // Xarajatlar varag'i
+        const xarajatData = [["Maqsad", "Summa"]];
+        data.xarajatlar.forEach(x => xarajatData.push([x.nima, x.pul]));
+        const wsXarajat = XLSX.utils.aoa_to_sheet(xarajatData);
+        XLSX.utils.book_append_sheet(wb, wsXarajat, "Xarajatlar");
+
+        XLSX.writeFile(wb, `Steel_Center_Report_${data.date.split(',')[0]}.xlsx`);
     }
 
+    // Dastlabki yuklash
     window.onload = render;
 </script>
 </body>
