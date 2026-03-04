@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEEL CENTER - PROFESSIONAL ERP</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>STEEL CENTER ERP - FULL SYSTEM</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <style>
         :root { --p: #1a202c; --s: #2d3748; --acc: #f6ad55; --bg: #f7fafc; --brdr: #e2e8f0; --green: #38a169; --red: #e53e3e; --blue: #3182ce; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
         
         /* Login */
         #login-screen { position: fixed; inset: 0; background: var(--p); display: flex; align-items: center; justify-content: center; z-index: 9999; color: white; flex-direction: column; }
-        .login-box { background: #2d3748; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; border: 1px solid var(--acc); }
-        .login-box input { padding: 15px; font-size: 24px; text-align: center; border-radius: 8px; width: 160px; margin-bottom: 20px; outline: none; letter-spacing: 5px; }
+        .login-box { background: #2d3748; padding: 40px; border-radius: 15px; text-align: center; border: 1px solid var(--acc); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .login-box input { padding: 15px; font-size: 24px; text-align: center; border-radius: 8px; width: 160px; margin-bottom: 20px; border: none; outline: none; }
 
         /* Sidebar */
         .sidebar { width: 260px; background: var(--p); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
@@ -29,32 +25,41 @@
         .main { flex: 1; padding: 25px; overflow-y: auto; box-sizing: border-box; }
         .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--brdr); margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         
+        /* Dashboard Stats */
         .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-box { padding: 20px; border-radius: 10px; color: white; }
-        .stat-box small { font-size: 12px; text-transform: uppercase; opacity: 0.9; }
-        .stat-box span { display: block; font-size: 22px; font-weight: 800; margin-top: 5px; font-family: monospace; }
+        .stat-box { padding: 20px; border-radius: 10px; color: white; position: relative; overflow: hidden; }
+        .stat-box small { font-size: 11px; text-transform: uppercase; opacity: 0.8; font-weight: bold; }
+        .stat-box span { display: block; font-size: 24px; font-weight: 800; margin-top: 5px; font-family: 'Courier New', monospace; }
 
+        /* Forms */
         .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--brdr); }
-        input, select { padding: 10px; border: 1px solid var(--brdr); border-radius: 6px; font-size: 14px; outline: none; }
+        input, select { padding: 12px; border: 1px solid var(--brdr); border-radius: 6px; outline: none; font-size: 14px; }
+        input:focus { border-color: var(--blue); }
         .btn-add { background: var(--green); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-add:hover { filter: brightness(1.1); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #f8fafc; padding: 12px; text-align: left; font-size: 12px; color: #718096; border-bottom: 2px solid var(--brdr); }
-        td { padding: 12px; border-bottom: 1px solid var(--brdr); font-size: 14px; }
-        .num { font-family: 'Courier New', monospace; font-weight: bold; }
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th { background: #f8fafc; padding: 12px; text-align: left; font-size: 11px; color: #718096; border-bottom: 2px solid var(--brdr); text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid var(--brdr); font-size: 14px; color: var(--s); }
+        
+        /* Special Row Styles */
+        .row-paid { background-color: #f0fff4 !important; color: #276749 !important; font-weight: bold; }
+        .row-paid td { border-bottom: 1px solid #c6f6d5; }
+        
         .hidden { display: none !important; }
-        .del-btn { color: var(--red); cursor: pointer; border: 1px solid var(--red); background: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-        #loader { position: fixed; top: 10px; right: 10px; background: var(--green); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; display: none; }
+        .del-btn { color: var(--red); cursor: pointer; border: 1px solid var(--red); background: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .del-btn:hover { background: var(--red); color: white; }
+        
+        .status-btn { background: var(--blue); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<div id="loader">Sinxronizatsiya...</div>
-
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="margin:0">STEEL CENTER PRO</h2>
-        <p>Xavfsizlik kodini kiriting:</p>
+        <h1 style="margin:0 0 10px 0;">STEEL CENTER</h1>
+        <p>Xavfsizlik parolini kiriting:</p>
         <input type="password" id="pass-input" maxlength="4" placeholder="****">
         <button class="btn-add" onclick="checkPass()" style="width: 100%; font-size: 18px;">KIRISH</button>
     </div>
@@ -62,113 +67,126 @@
 
 <div id="app-ui" class="hidden" style="display: flex; width: 100%; height: 100vh;">
     <div class="sidebar">
-        <div class="sidebar-header">STEEL ERP V3.1</div>
-        <nav id="nav-links">
+        <div class="sidebar-header">SC MANAGER V6.0</div>
+        <nav>
             <a onclick="route('stats')" id="m-stats" class="active">📊 Statistika</a>
-            <a onclick="route('ombor')" id="m-ombor">📦 Ombor Boshqaruvi</a>
-            <a onclick="route('savdo')" id="m-savdo">💰 Sotuv Bo'limi</a>
+            <a onclick="route('ombor')" id="m-ombor">📦 Ombor (Kirim)</a>
+            <a onclick="route('savdo')" id="m-savdo">💰 Naqd Savdo</a>
             <a onclick="route('nasiya')" id="m-nasiya">🤝 Nasiya Daftari</a>
-            <a onclick="route('ishchilar')" id="m-ishchilar">👥 Ishchilar</a>
-            <a onclick="route('xarajat')" id="m-xarajat">📉 Xarajatlar</a>
-            <a onclick="route('arxiv')" id="m-arxiv">📚 Hisobotlar (Excel)</a>
+            <a onclick="route('ishchilar')" id="m-ishchilar">👥 Ishchilar Maoshi</a>
+            <a onclick="route('xarajat')" id="m-xarajat">📉 Kunlik Xarajat</a>
+            <a onclick="route('arxiv')" id="m-arxiv">📚 Hisobotlar</a>
         </nav>
-        <button onclick="archiveDay()" style="background:var(--red); color:white; padding:15px; margin:15px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">🔒 KUNNI YOPISH</button>
+        <button onclick="archiveDay()" style="background:var(--red); color:white; padding:15px; margin:15px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);">🔒 KUNNI YOPISH</button>
     </div>
 
     <div class="main">
         <div id="sec-stats" class="card">
-            <h3>Hozirgi Holat</h3>
+            <h3>Asosiy Ko'rsatkichlar</h3>
             <div class="stat-grid">
-                <div class="stat-box" style="background: var(--blue);"><small>Ombor Qiymati</small><span id="st-ombor">0</span></div>
-                <div class="stat-box" style="background: var(--green);"><small>Bugungi Kirim</small><span id="st-savdo">0</span></div>
-                <div class="stat-box" style="background: var(--acc);"><small>Jami Nasiya</small><span id="st-nasiya">0</span></div>
-                <div class="stat-box" style="background: #805ad5;"><small>Ishchilarga To'lov</small><span id="st-ishchi">0</span></div>
+                <div class="stat-box" style="background: #2c5282;"><small>💵 Naqd Kassa</small><span id="st-kassa">0</span></div>
+                <div class="stat-box" style="background: var(--blue);"><small>🏗️ Ombor Qiymati</small><span id="st-ombor">0</span></div>
+                <div class="stat-box" style="background: var(--acc);"><small>📝 Jami Nasiyalar</small><span id="st-nasiya">0</span></div>
+                <div class="stat-box" style="background: #805ad5;"><small>📈 Bugun Sof Foyda</small><span id="st-foyda">0</span></div>
             </div>
-            <h4>📦 Ombor Qoldig'i</h4>
-            <table><thead><tr><th>Mahsulot</th><th>Vazn (kg)</th><th>Tannarx</th><th>Jami Qiymat</th></tr></thead><tbody id="astatka-body"></tbody></table>
+            
+            <h4>🏗️ Ombor Qoldig'i (Astatka)</h4>
+            <table>
+                <thead><tr><th>Mahsulot</th><th>Vazn (kg)</th><th>Tannarx</th><th>Jami Qiymat</th></tr></thead>
+                <tbody id="astatka-body"></tbody>
+            </table>
         </div>
 
         <div id="sec-ombor" class="card hidden">
-            <h3>Omborga Kirim</h3>
+            <h3>📦 Omborga Kirim Qilish</h3>
             <div class="form-row">
                 <input type="text" id="p_nomi" placeholder="Mahsulot nomi">
                 <input type="number" id="p_vazni" placeholder="Vazni (kg)">
-                <input type="number" id="p_narxi" placeholder="Tannarxi">
-                <button class="btn-add" onclick="addOmbor()">Qo'shish</button>
+                <input type="number" id="p_narxi" placeholder="Tannarxi (1kg)">
+                <button class="btn-add" onclick="addOmbor()">Omborga Qo'shish</button>
             </div>
-            <table><thead><tr><th>Nomi</th><th>Vazni</th><th>Narxi</th><th>Amal</th></tr></thead><tbody id="body-ombor"></tbody></table>
+            <table>
+                <thead><tr><th>Mahsulot Nomi</th><th>Vazni</th><th>Tannarx</th><th>Amal</th></tr></thead>
+                <tbody id="body-ombor"></tbody>
+            </table>
         </div>
 
         <div id="sec-savdo" class="card hidden">
-            <h3>Bugungi Savdolar</h3>
+            <h3>💰 Naqd Savdo (Sotuv)</h3>
             <div class="form-row">
                 <select id="s_select"></select>
-                <input type="number" id="s_vazni" placeholder="Vazni">
-                <input type="number" id="s_narxi" placeholder="Sotuv narxi">
+                <input type="number" id="s_vazni" placeholder="Sotuv Vazni">
+                <input type="number" id="s_narxi" placeholder="Sotuv Narxi">
                 <button class="btn-add" onclick="addSavdo()">Sotish</button>
             </div>
-            <table><thead><tr><th>Nomi</th><th>Vazni</th><th>Narxi</th><th>Jami</th><th>Foyda</th><th>Amal</th></tr></thead><tbody id="body-savdo"></tbody></table>
+            <table>
+                <thead><tr><th>Nomi</th><th>Vazn</th><th>Sotuv Narxi</th><th>Jami</th><th>Foyda</th><th>Amal</th></tr></thead>
+                <tbody id="body-savdo"></tbody>
+            </table>
         </div>
 
         <div id="sec-nasiya" class="card hidden">
-            <h3>Nasiyalar Daftari</h3>
+            <h3>🤝 Nasiya Berish</h3>
             <div class="form-row">
                 <input type="text" id="n_ism" placeholder="Mijoz ismi">
-                <input type="text" id="n_nima" placeholder="Nima berildi">
+                <select id="n_select"></select>
                 <input type="number" id="n_vazn" placeholder="Vazni">
-                <input type="number" id="n_pul" placeholder="Summa">
-                <button class="btn-add" onclick="addNasiya()">Saqlash</button>
+                <input type="number" id="n_pul" placeholder="Jami Qarz Summasi">
+                <button class="btn-add" onclick="addNasiya()" style="background:var(--blue)">Nasiyaga Berish</button>
             </div>
-            <table><thead><tr><th>Mijoz</th><th>Narsa</th><th>Vazn</th><th>Summa</th><th>Amal</th></tr></thead><tbody id="body-nasiya"></tbody></table>
-            <h4 style="margin-top:20px;">✅ Qaytgan Nasiyalar (Bugun)</h4>
-            <table><thead><tr><th>Sana</th><th>Mijoz</th><th>Nima</th><th>Summa</th></tr></thead><tbody id="body-nasiya-qaytgan"></tbody></table>
+            <table>
+                <thead><tr><th>Mijoz</th><th>Narsa</th><th>Vazn</th><th>Summa</th><th>Holat</th><th>Amal</th></tr></thead>
+                <tbody id="body-nasiya"></tbody>
+            </table>
         </div>
 
         <div id="sec-ishchilar" class="card hidden">
-            <h3>Ishchilar Maoshi</h3>
+            <h3>👥 Ishchilar Maoshi (Kassadan)</h3>
             <div class="form-row">
-                <input type="text" id="i_ism" placeholder="Ismi">
-                <input type="number" id="i_pul" placeholder="Summa">
-                <button class="btn-add" onclick="addIshchi()">Saqlash</button>
+                <input type="text" id="i_ism" placeholder="Ishchi ismi">
+                <input type="number" id="i_pul" placeholder="To'lov summasi">
+                <button class="btn-add" onclick="addIshchi()">To'lovni Tasdiqlash</button>
             </div>
-            <table><thead><tr><th>Sana</th><th>Ishchi</th><th>Summa</th><th>Amal</th></tr></thead><tbody id="body-ishchi-history"></tbody></table>
+            <table>
+                <thead><tr><th>Sana</th><th>Ishchi</th><th>Summa</th><th>Amal</th></tr></thead>
+                <tbody id="body-ishchilar"></tbody>
+            </table>
         </div>
 
         <div id="sec-xarajat" class="card hidden">
-            <h3>Kunlik Xarajatlar</h3>
+            <h3>📉 Kunlik Xarajatlar (Kassadan)</h3>
             <div class="form-row">
-                <input type="text" id="x_nima" placeholder="Maqsad">
+                <input type="text" id="x_nima" placeholder="Xarajat maqsadi">
                 <input type="number" id="x_pul" placeholder="Summa">
                 <button class="btn-add" onclick="addXarajat()">Saqlash</button>
             </div>
-            <table><thead><tr><th>Maqsad</th><th>Summa</th><th>Amal</th></tr></thead><tbody id="body-xarajat"></tbody></table>
+            <table>
+                <thead><tr><th>Maqsad</th><th>Summa</th><th>Amal</th></tr></thead>
+                <tbody id="body-xarajat"></tbody>
+            </table>
         </div>
 
         <div id="sec-arxiv" class="card hidden">
-            <h3>Yopilgan Kunlar Arvixi</h3>
+            <h3>📚 Yopilgan Kunlar Hisoboti</h3>
             <div id="arxiv-list"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. DATA STATE
-    const config = { apiKey: "YOUR_API", databaseURL: "https://YOUR_DB.firebaseio.com" };
-    // firebase.initializeApp(config); // Firebase ishlatmoqchi bo'lsangiz buni yoqing
-
-    let state = JSON.parse(localStorage.getItem('steel_data')) || { 
-        ombor: [], savdo: [], nasiya: [], nasiya_qaytgan: [], xarajat: [], ishchilar: [] 
+    // INITIAL DATA LOAD
+    let state = JSON.parse(localStorage.getItem('steel_erp_v6_db')) || { 
+        ombor: [], savdo: [], nasiya: [], ishchilar: [], xarajat: [], kassa: 0 
     };
 
     function sync() {
-        localStorage.setItem('steel_data', JSON.stringify(state));
+        localStorage.setItem('steel_erp_v6_db', JSON.stringify(state));
         render();
-        // if(firebase.apps.length) firebase.database().ref('steel_cloud').set(state);
     }
 
-    const fmt = (n) => new Intl.NumberFormat('uz-UZ').format(n || 0);
+    const fmt = (n) => new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0));
 
-    // 2. NAVIGATION
+    // LOGIN & ROUTING
     function checkPass() {
         if(document.getElementById('pass-input').value === "0303") {
             document.getElementById('login-screen').classList.add('hidden');
@@ -185,165 +203,204 @@
         if(id === 'arxiv') renderArxiv();
     }
 
-    // 3. CORE FUNCTIONS
+    // 1. OMBOR FUNKSIYALARI
     function addOmbor() {
-        const nomi = document.getElementById('p_nomi').value;
+        const nomi = document.getElementById('p_nomi').value.trim();
         const v = parseFloat(document.getElementById('p_vazni').value) || 0;
         const n = parseFloat(document.getElementById('p_narxi').value) || 0;
         if(!nomi || v <= 0) return;
-        let f = state.ombor.find(x => x.nomi === nomi);
-        if(f) { f.vazni += v; f.narxi = n; } else { state.ombor.push({nomi, vazni:v, narxi:n}); }
+        
+        let existing = state.ombor.find(x => x.nomi.toLowerCase() === nomi.toLowerCase());
+        if(existing) {
+            existing.vazni += v;
+            existing.narxi = n;
+        } else {
+            state.ombor.push({ nomi, vazni: v, narxi: n });
+        }
         sync();
-        document.getElementById('p_nomi').value = ''; document.getElementById('p_vazni').value = ''; document.getElementById('p_narxi').value = '';
+        ['p_nomi','p_vazni','p_narxi'].forEach(i => document.getElementById(i).value = '');
     }
 
+    // 2. SAVDO (KASSAGA PUL QO'SHADI, OMBORDAN AYIRADI)
     function addSavdo() {
         const idx = document.getElementById('s_select').value;
         const v = parseFloat(document.getElementById('s_vazni').value) || 0;
         const n = parseFloat(document.getElementById('s_narxi').value) || 0;
         if(idx === "" || v <= 0) return;
-        const p = state.ombor[idx];
-        if(p.vazni < v) return alert("Omborda yetarli emas!");
-        state.savdo.push({ nomi: p.nomi, vazni: v, tan: p.narxi, sotuv: n, jami: v*n, foyda: (n-p.narxi)*v });
-        p.vazni -= v;
+        
+        const prod = state.ombor[idx];
+        if(prod.vazni < v) return alert("Omborda yetarli mahsulot yo'q!");
+
+        const jami = v * n;
+        const foyda = (n - prod.narxi) * v;
+
+        state.savdo.push({ nomi: prod.nomi, vazni: v, tan: prod.narxi, sotuv: n, jami: jami, foyda: foyda });
+        state.kassa += jami;
+        prod.vazni -= v;
         sync();
+        document.getElementById('s_vazni').value = '';
     }
 
+    // 3. NASIYA (OMBORDAN AYIRADI, FAQAT YOPILSA KASSAGA QO'SHADI)
     function addNasiya() {
-        state.nasiya.push({ 
-            ism: document.getElementById('n_ism').value, 
-            nima: document.getElementById('n_nima').value, 
-            vazn: document.getElementById('n_vazn').value, 
-            pul: parseFloat(document.getElementById('n_pul').value) || 0 
-        });
+        const ism = document.getElementById('n_ism').value.trim();
+        const idx = document.getElementById('n_select').value;
+        const v = parseFloat(document.getElementById('n_vazn').value) || 0;
+        const pul = parseFloat(document.getElementById('n_pul').value) || 0;
+        
+        if(!ism || idx === "" || v <= 0) return;
+        const prod = state.ombor[idx];
+        if(prod.vazni < v) return alert("Omborda mahsulot yetarli emas!");
+
+        state.nasiya.push({ ism, nima: prod.nomi, vazn: v, pul, paid: false });
+        prod.vazni -= v;
         sync();
+        ['n_ism','n_vazn','n_pul'].forEach(i => document.getElementById(i).value = '');
     }
 
     function closeNasiya(idx) {
-        const n = state.nasiya[idx];
-        state.nasiya_qaytgan.push({ date: new Date().toLocaleDateString(), ism: n.ism, nima: n.nima, pul: n.pul });
-        state.nasiya.splice(idx, 1);
-        sync();
+        if(state.nasiya[idx].paid) return;
+        if(confirm("To'lov qabul qilindimi? Pul kassaga qo'shiladi.")) {
+            state.nasiya[idx].paid = true;
+            state.kassa += state.nasiya[idx].pul;
+            sync();
+        }
     }
 
+    // 4. CHIQIMLAR (KASSADAN AYIRADI)
     function addIshchi() {
-        state.ishchilar.push({ date: new Date().toLocaleDateString(), ism: document.getElementById('i_ism').value, pul: parseFloat(document.getElementById('i_pul').value) || 0 });
+        const ism = document.getElementById('i_ism').value.trim();
+        const pul = parseFloat(document.getElementById('i_pul').value) || 0;
+        if(!ism || pul <= 0) return;
+        if(pul > state.kassa) return alert("Kassada yetarli mablag' yo'q!");
+
+        state.ishchilar.push({ date: new Date().toLocaleDateString(), ism, pul });
+        state.kassa -= pul;
         sync();
+        document.getElementById('i_ism').value = ''; document.getElementById('i_pul').value = '';
     }
 
     function addXarajat() {
-        state.xarajat.push({ nima: document.getElementById('x_nima').value, pul: parseFloat(document.getElementById('x_pul').value) || 0 });
+        const nima = document.getElementById('x_nima').value.trim();
+        const pul = parseFloat(document.getElementById('x_pul').value) || 0;
+        if(!nima || pul <= 0) return;
+        if(pul > state.kassa) return alert("Kassada yetarli mablag' yo'q!");
+
+        state.xarajat.push({ nima, pul });
+        state.kassa -= pul;
         sync();
+        document.getElementById('x_nima').value = ''; document.getElementById('x_pul').value = '';
     }
 
-    function del(type, idx) { if(confirm("O'chirilsinmi?")) { state[type].splice(idx, 1); sync(); } }
+    // GENERAL DELETE
+    function del(type, idx) {
+        if(confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
+            state[type].splice(idx, 1);
+            sync();
+        }
+    }
 
-    // 4. RENDER UI
+    // RENDER ALL TABLES
     function render() {
-        // Stats & Ombor
+        let tOmborVal = 0; state.ombor.forEach(i => tOmborVal += (i.vazni * i.narxi));
+        let tNasiyaVal = 0; state.nasiya.forEach(i => { if(!i.paid) tNasiyaVal += i.pul; });
+        let tFoyda = 0; state.savdo.forEach(i => tFoyda += i.foyda);
+
+        // Stats
+        document.getElementById('st-kassa').innerText = fmt(state.kassa);
+        document.getElementById('st-ombor').innerText = fmt(tOmborVal);
+        document.getElementById('st-nasiya').innerText = fmt(tNasiyaVal);
+        document.getElementById('st-foyda').innerText = fmt(tFoyda);
+
+        // Astatka
         const bA = document.getElementById('astatka-body'); bA.innerHTML = '';
+        state.ombor.forEach(i => {
+            if(i.vazni > 0) bA.innerHTML += `<tr><td><b>${i.nomi}</b></td><td>${i.vazni} kg</td><td>${fmt(i.narxi)}</td><td>${fmt(i.vazni*i.narxi)}</td></tr>`;
+        });
+
+        // Ombor Table
         const bO = document.getElementById('body-ombor'); bO.innerHTML = '';
-        let tO = 0;
-        state.ombor.forEach((i, idx) => {
-            let j = i.vazni * i.narxi; tO += j;
-            bO.innerHTML += `<tr><td>${i.nomi}</td><td>${i.vazni}</td><td>${fmt(i.narxi)}</td><td><button class="del-btn" onclick="del('ombor',${idx})">X</button></td></tr>`;
-            if(i.vazni > 0) bA.innerHTML += `<tr><td>${i.nomi}</td><td class="num">${i.vazni} kg</td><td class="num">${fmt(i.narxi)}</td><td class="num">${fmt(j)}</td></tr>`;
-        });
+        state.ombor.forEach((i, idx) => bO.innerHTML += `<tr><td>${i.nomi}</td><td>${i.vazni}</td><td>${fmt(i.narxi)}</td><td><button class="del-btn" onclick="del('ombor',${idx})">X</button></td></tr>`);
 
-        // Savdo
+        // Savdo Table
         const bS = document.getElementById('body-savdo'); bS.innerHTML = '';
-        let tS = 0, tF = 0;
-        state.savdo.forEach((i, idx) => {
-            tS += i.jami; tF += i.foyda;
-            bS.innerHTML += `<tr><td>${i.nomi}</td><td>${i.vazni}</td><td>${fmt(i.sotuv)}</td><td class="num">${fmt(i.jami)}</td><td style="color:green">${fmt(i.foyda)}</td><td><button class="del-btn" onclick="del('savdo',${idx})">X</button></td></tr>`;
-        });
+        state.savdo.forEach((i, idx) => bS.innerHTML += `<tr><td>${i.nomi}</td><td>${i.vazni}</td><td>${fmt(i.sotuv)}</td><td>${fmt(i.jami)}</td><td style="color:green; font-weight:bold;">+${fmt(i.foyda)}</td><td><button class="del-btn" onclick="del('savdo',${idx})">X</button></td></tr>`);
 
-        // Nasiya
+        // Nasiya Table (COLOR LOGIC)
         const bN = document.getElementById('body-nasiya'); bN.innerHTML = '';
         state.nasiya.forEach((i, idx) => {
-            bN.innerHTML += `<tr><td>${i.ism}</td><td>${i.nima}</td><td>${i.vazn}</td><td class="num">${fmt(i.pul)}</td><td><button onclick="closeNasiya(${idx})" style="color:green; cursor:pointer;">✅ Qaytdi</button></td></tr>`;
-        });
-
-        const bNQ = document.getElementById('body-nasiya-qaytgan'); bNQ.innerHTML = '';
-        let tNQ = 0; const today = new Date().toLocaleDateString();
-        state.nasiya_qaytgan.forEach(i => {
-            if(i.date === today) {
-                tNQ += i.pul;
-                bNQ.innerHTML += `<tr><td>${i.date}</td><td>${i.ism}</td><td>${i.nima}</td><td class="num">${fmt(i.pul)}</td></tr>`;
-            }
+            const rowClass = i.paid ? 'row-paid' : '';
+            const action = i.paid ? '✅ To\'langan' : `<button class="status-btn" onclick="closeNasiya(${idx})">Qabul qilish</button>`;
+            bN.innerHTML += `<tr class="${rowClass}"><td>${i.ism}</td><td>${i.nima}</td><td>${i.vazn} kg</td><td>${fmt(i.pul)}</td><td>${action}</td><td><button class="del-btn" onclick="del('nasiya',${idx})">X</button></td></tr>`;
         });
 
         // Ishchi & Xarajat
-        const bIH = document.getElementById('body-ishchi-history'); bIH.innerHTML = '';
-        let tI = 0; state.ishchilar.forEach((i, idx) => { tI += i.pul; bIH.innerHTML += `<tr><td>${i.date}</td><td>${i.ism}</td><td class="num">${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('ishchilar',${idx})">X</button></td></tr>`; });
+        const bI = document.getElementById('body-ishchilar'); bI.innerHTML = '';
+        state.ishchilar.forEach((i, idx) => bI.innerHTML += `<tr><td>${i.date}</td><td>${i.ism}</td><td>${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('ishchilar',${idx})">X</button></td></tr>`);
 
         const bX = document.getElementById('body-xarajat'); bX.innerHTML = '';
-        state.xarajat.forEach((i, idx) => { bX.innerHTML += `<tr><td>${i.nima}</td><td class="num">${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('xarajat',${idx})">X</button></td></tr>`; });
+        state.xarajat.forEach((i, idx) => bX.innerHTML += `<tr><td>${i.nima}</td><td>${fmt(i.pul)}</td><td><button class="del-btn" onclick="del('xarajat',${idx})">X</button></td></tr>`);
 
-        // Update Stats UI
-        document.getElementById('st-ombor').innerText = fmt(tO);
-        document.getElementById('st-savdo').innerText = fmt(tS + tNQ);
-        document.getElementById('st-nasiya').innerText = fmt(state.nasiya.reduce((a,b)=>a+b.pul,0));
-        document.getElementById('st-ishchi').innerText = fmt(tI);
-
-        // Update Select Dropdown
-        const sel = document.getElementById('s_select'); sel.innerHTML = '<option value="">Tanlang...</option>';
-        state.ombor.forEach((p, i) => { if(p.vazni > 0) sel.innerHTML += `<option value="${i}">${p.nomi} (${p.vazni} kg)</option>`; });
+        // Update Selects
+        const sSel = document.getElementById('s_select'); 
+        const nSel = document.getElementById('n_select');
+        sSel.innerHTML = nSel.innerHTML = '<option value="">Mahsulotni tanlang...</option>';
+        state.ombor.forEach((p, i) => {
+            if(p.vazni > 0) {
+                const opt = `<option value="${i}">${p.nomi} (${p.vazni} kg)</option>`;
+                sSel.innerHTML += opt; nSel.innerHTML += opt;
+            }
+        });
     }
 
-    // 5. ARCHIVE & EXCEL (FIXED)
+    // 5. KUNNI YOPISH & ARXIV
     function archiveDay() {
-        if(!confirm("Bugunni yopasizmi?")) return;
-        let arc = JSON.parse(localStorage.getItem('steel_archives')) || [];
-        arc.push({ date: new Date().toLocaleString(), data: JSON.parse(JSON.stringify(state)) });
-        localStorage.setItem('steel_archives', JSON.stringify(arc));
+        if(!confirm("Diqqat! Savdo, Xarajat va Ishchi to'lovlari arxivga olinadi va ro'yxat tozalanadi. Kassa balansi va Ombor qoldig'i saqlanadi. Tasdiqlaysizmi?")) return;
         
-        // Kunliklarni tozalash
-        state.savdo = []; state.xarajat = []; state.ishchilar = []; state.nasiya_qaytgan = [];
+        let archives = JSON.parse(localStorage.getItem('steel_erp_archives')) || [];
+        archives.push({
+            date: new Date().toLocaleString(),
+            kassa: state.kassa,
+            savdolar: [...state.savdo],
+            xarajatlar: [...state.xarajat],
+            maoshlar: [...state.ishchilar]
+        });
+        localStorage.setItem('steel_erp_archives', JSON.stringify(archives));
+
+        // Ro'yxatlarni tozalash, Kassa va Omborga tegmaslik
+        state.savdo = [];
+        state.ishchilar = [];
+        state.xarajat = [];
         sync();
-        alert("Kun yopildi!");
+        alert("Kun yopildi va arxivlandi!");
+        route('stats');
     }
 
     function renderArxiv() {
         const container = document.getElementById('arxiv-list');
-        const arc = JSON.parse(localStorage.getItem('steel_archives')) || [];
-        container.innerHTML = arc.length ? '' : 'Arxiv yo\'q';
-        arc.reverse().forEach((a, i) => {
-            const idx = arc.length - 1 - i;
-            container.innerHTML += `<div style="padding:15px; border:1px solid #ddd; margin-bottom:10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; background:white;">
-                <span>📅 <b>${a.date}</b></span>
-                <button onclick="downloadExcel(${idx})" style="padding:8px 15px; background:var(--s); color:white; border:none; border-radius:5px; cursor:pointer;">📥 Excel Yuklash</button>
-            </div>`;
+        const archives = JSON.parse(localStorage.getItem('steel_erp_archives')) || [];
+        container.innerHTML = archives.length ? '' : '<p style="text-align:center; padding:20px; color:#aaa;">Arxiv bo\'sh</p>';
+        
+        [...archives].reverse().forEach((a, idx) => {
+            container.innerHTML += `
+                <div style="background:white; padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--brdr);">
+                    <span>📅 <b>${a.date}</b> | Kassada bo'lgan: <b>${fmt(a.kassa)}</b></span>
+                    <button onclick="downloadExcel(${archives.length - 1 - idx})" style="padding:8px 15px; background:var(--s); color:white; border:none; border-radius:5px; cursor:pointer;">📥 Excel Yuklash</button>
+                </div>`;
         });
     }
 
-    function downloadExcel(idx) {
-        const arc = JSON.parse(localStorage.getItem('steel_archives'));
-        const report = arc[idx];
-        const raw = report.data;
+    function downloadExcel(index) {
+        const archives = JSON.parse(localStorage.getItem('steel_erp_archives'));
+        const doc = archives[index];
         const wb = XLSX.utils.book_new();
 
-        // 1. Hisobot xulosasi (Diagramma uchun)
-        const summary = [
-            ["STEEL CENTER HISOBOTI", report.date],
-            ["KURSATKICH", "SUMMA (UZS)"],
-            ["Jami Kirim", raw.savdo.reduce((a,b)=>a+b.jami,0)],
-            ["Jami Foyda", raw.savdo.reduce((a,b)=>a+b.foyda,0)],
-            ["Xarajatlar", raw.xarajat.reduce((a,b)=>a+b.pul,0)],
-            [""],
-            ["📊 SOTUV TAHLILI (MAHSULOT - SUMMA)"],
-        ];
-        raw.savdo.forEach(s => summary.push([s.nomi, s.jami]));
-
-        const ws1 = XLSX.utils.aoa_to_sheet(summary);
-        XLSX.utils.book_append_sheet(wb, ws1, "XULOSA_TAHLIL");
-
-        // 2. Qolgan ma'lumotlar
-        if(raw.savdo.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(raw.savdo), "SOTUV_BATAFSIL");
-        if(raw.nasiya.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(raw.nasiya), "QOLGAN_NASIYALAR");
-        if(raw.ishchilar.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(raw.ishchilar), "ISHCHILAR");
-
-        XLSX.writeFile(wb, `Steel_Report_${idx+1}.xlsx`);
+        const summary = [["Sana", doc.date], ["Yopilishdagi Kassa", doc.kassa], [], ["SAVDOLAR"]];
+        doc.savdolar.forEach(s => summary.push([s.nomi, s.vazni + "kg", s.jami, "Foyda: " + s.foyda]));
+        
+        const ws = XLSX.utils.aoa_to_sheet(summary);
+        XLSX.utils.book_append_sheet(wb, ws, "Hisobot");
+        XLSX.writeFile(wb, `Steel_Center_${doc.date.split(',')[0]}.xlsx`);
     }
 
     window.onload = render;
