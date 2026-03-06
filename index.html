@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEEL CENTER ERP V25.0 | ULTIMATE SYSTEM</title>
-    
+    <title>STEEL CENTER ERP v26.0 | PROFESSIONAL SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* =============================================
-        1. CSS CORE ARCHITECTURE
-        =============================================
-        */
         :root {
             --sidebar: #0f172a;
             --sidebar-active: #1e293b;
@@ -28,105 +23,161 @@
             --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
+        /* Umumiy Stil */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- AUTH LAYER --- */
-        #auth-screen {
-            position: fixed; inset: 0; background: var(--sidebar); z-index: 10000;
-            display: flex; align-items: center; justify-content: center; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .auth-card {
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); padding: 60px;
-            border-radius: 35px; width: 450px; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+        /* Kirish Ekrani */
+        #auth-screen { position: fixed; inset: 0; background: var(--sidebar); z-index: 10000; display: flex; align-items: center; justify-content: center; transition: 0.8s; }
+        .auth-card { 
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(20px); 
+            padding: 60px; 
+            border-radius: 35px; 
+            width: 450px; 
+            text-align: center; 
+            border: 1px solid rgba(255,255,255,0.1); 
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
-        .auth-card h1 { color: var(--accent); font-family: 'Montserrat'; font-size: 32px; margin-bottom: 5px; letter-spacing: 2px; }
-        .pin-field {
-            width: 100%; padding: 20px; border-radius: 15px; border: none; font-size: 36px;
-            text-align: center; letter-spacing: 20px; font-weight: 900; margin: 30px 0; background: #fff;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        .pin-field { 
+            width: 100%; 
+            padding: 20px; 
+            border-radius: 15px; 
+            border: none; 
+            font-size: 36px; 
+            text-align: center; 
+            letter-spacing: 20px; 
+            font-weight: 900; 
+            margin: 30px 0; 
+            background: #fff;
         }
 
-        /* --- SIDEBAR DESIGN --- */
-        .sidebar { width: 300px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; flex-shrink: 0; position: relative; }
+        /* Sidebar */
+        .sidebar { width: 280px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; flex-shrink: 0; transition: 0.3s; }
         .logo-box { padding: 40px 30px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .logo-box h2 { font-family: 'Montserrat'; font-size: 24px; color: var(--accent); text-transform: uppercase; }
+        .logo-box h2 { font-family: 'Montserrat', sans-serif; letter-spacing: 2px; color: var(--accent); }
         
-        .nav-list { flex: 1; padding: 25px 0; overflow-y: auto; }
-        .nav-item {
-            padding: 18px 30px; display: flex; align-items: center; color: #94a3b8; text-decoration: none;
-            cursor: pointer; transition: all 0.3s; border-left: 5px solid transparent; font-size: 14px; font-weight: 600;
+        .nav-list { flex: 1; padding: 20px 0; overflow-y: auto; }
+        .nav-item { 
+            padding: 15px 25px; 
+            display: flex; 
+            align-items: center; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            border-left: 5px solid transparent; 
+            font-size: 14px; 
+            font-weight: 500; 
         }
         .nav-item:hover, .nav-item.active { background: var(--sidebar-active); color: #fff; border-left-color: var(--accent); }
-        
-        /* --- MAIN INTERFACE --- */
-        .main-engine { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .top-bar {
-            height: 90px; background: #fff; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 45px; border-bottom: 1px solid #e2e8f0; z-index: 10;
-        }
-        .top-bar h3 { font-family: 'Montserrat'; font-size: 22px; color: var(--sidebar); }
-        .workspace { padding: 35px; overflow-y: auto; flex: 1; scroll-behavior: smooth; background: #f8fafc; }
+        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
 
-        /* --- DASHBOARD WIDGETS --- */
-        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 35px; }
+        /* Main Context */
+        .main-engine { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-bar { 
+            height: 80px; 
+            background: #fff; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 40px; 
+            border-bottom: 1px solid #e2e8f0; 
+            z-index: 10;
+        }
+
+        .workspace { padding: 30px; overflow-y: auto; flex: 1; background: #f8fafc; }
+
+        /* Kartochkalar va Gridlar */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
         .card-stat { 
-            background: #fff; padding: 30px; border-radius: 20px; box-shadow: var(--shadow); 
-            transition: 0.3s; border-bottom: 4px solid transparent;
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow); 
+            display: flex; 
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
-        .card-stat:hover { transform: translateY(-5px); }
-        .card-stat span { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .card-stat h2 { font-size: 26px; margin-top: 12px; font-weight: 900; font-family: 'Montserrat'; }
-
-        /* --- MODULE STYLES --- */
-        .module-card { background: #fff; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: var(--shadow); }
-        .module-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+        .card-stat span { font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+        .card-stat h2 { font-size: 24px; margin-top: 10px; font-weight: 800; color: var(--sidebar); }
         
+        /* Modullar */
+        .module-card { background: #fff; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid #f1f5f9; }
+        .module-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        /* Inputlar */
         .input-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; 
-            background: #f8fafc; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #e2e8f0;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 15px; 
+            background: #f8fafc; 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-bottom: 20px; 
+            border: 1px solid #e2e8f0;
         }
-        .field label { display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; }
-        input, select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 15px; transition: 0.3s; outline: none; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-        
-        /* --- TABLES --- */
-        .table-container { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th { text-align: left; padding: 16px; background: #f8fafc; color: var(--text-muted); font-size: 12px; font-weight: 800; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: var(--text-main); font-weight: 500; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #fcfcfc; }
+        .field label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px 15px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 10px; 
+            outline: none; 
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
 
-        /* --- BUTTONS --- */
+        /* Jadvallar */
+        .table-container { width: 100%; overflow-x: auto; border-radius: 12px; background: #fff; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 15px 20px; background: #f8fafc; font-size: 11px; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 15px 20px; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 500; }
+        tr:hover { background: #fdfdfd; }
+
+        /* Tugmalar */
         .btn { 
-            padding: 14px 24px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; 
-            transition: 0.2s; font-size: 13px; display: inline-flex; align-items: center; gap: 10px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            padding: 12px 24px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-size: 12px; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px;
         }
         .btn-p { background: var(--primary); color: #fff; }
+        .btn-p:hover { background: #2563eb; transform: translateY(-2px); }
         .btn-s { background: var(--success); color: #fff; }
         .btn-d { background: var(--danger); color: #fff; }
         .btn-w { background: var(--warning); color: #fff; }
-        .btn-sm { padding: 8px 16px; font-size: 11px; }
-        .btn:active { transform: scale(0.95); }
+        .btn-sm { padding: 8px 12px; font-size: 10px; }
 
-        /* --- VISUAL ELEMENTS --- */
-        .progress-container { width: 100%; height: 10px; background: #e2e8f0; border-radius: 10px; margin-top: 10px; overflow: hidden; }
-        .progress-bar { height: 100%; transition: 1s ease-in-out; border-radius: 10px; }
-        .badge { padding: 6px 12px; border-radius: 50px; font-size: 11px; font-weight: 800; }
+        /* Badge */
+        .badge { padding: 6px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; display: inline-block; }
         .badge-red { background: #fee2e2; color: #ef4444; }
         .badge-green { background: #dcfce7; color: #10b981; }
+        .badge-yellow { background: #fef3c7; color: #d97706; }
 
         .hidden { display: none !important; }
-        #clock-digital { font-size: 26px; font-weight: 900; color: var(--primary); letter-spacing: 1px; font-family: 'Montserrat'; }
 
-        /* HR GRID */
-        .worker-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
-        .worker-card { 
-            background: #fff; border: 1px solid #e2e8f0; padding: 25px; border-radius: 20px; 
-            box-shadow: var(--shadow); border-top: 5px solid var(--primary);
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Progress Bar */
+        .stock-progress { height: 6px; border-radius: 10px; background: #e2e8f0; margin-top: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; transition: 0.5s ease-in-out; }
+
+        /* Responsive Design Elements */
+        @media (max-width: 1024px) {
+            .stat-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -134,102 +185,123 @@
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h1>STEEL CENTER</h1>
-            <p style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:700;">V25.0 ULTIMATE EDITION</p>
-            <input type="password" id="sys-pin" class="pin-field" maxlength="4" placeholder="••••">
-            <button class="btn btn-w" style="width: 100%; padding: 18px;" onclick="Core.unlock()">SISTEMAGA KIRISH</button>
+            <h1 style="color:#fff; margin-bottom:10px;">STEEL CENTER</h1>
+            <p style="color:#94a3b8; font-size:14px;">Tizimga kirish uchun maxfiy kodni kiriting</p>
+            <input type="password" id="sys-pin" class="pin-field" maxlength="4" placeholder="••••" autocomplete="off">
+            <button class="btn btn-w" style="width:100%; padding:20px; font-size:16px;" onclick="Core.unlock()">TIZIMGA KIRISH</button>
+            <p id="auth-error" style="color:var(--danger); margin-top:15px; font-weight:600; display:none;">PIN kod xato!</p>
         </div>
     </div>
 
     <div class="sidebar">
         <div class="logo-box">
             <h2>STEEL CENTER</h2>
-            <small style="opacity:0.5; font-weight:700;">INDUSTRIAL ERP</small>
+            <small style="color:#64748b; font-weight:700;">V26.0 PRO ERP</small>
         </div>
         <div class="nav-list">
-            <div class="nav-item active" onclick="Core.view('dash', this)">📊 Dashboard Control</div>
-            <div class="nav-item" onclick="Core.view('warehouse', this)">📦 Ombor Boshqaruvi</div>
-            <div class="nav-item" onclick="Core.view('sales', this)">💰 Savdo Bo'limi</div>
+            <div class="nav-item active" onclick="Core.view('dash', this)">📊 Dashboard (Umumiy)</div>
+            <div class="nav-item" onclick="Core.view('warehouse', this)">📦 Ombor Logistikasi</div>
+            <div class="nav-item" onclick="Core.view('sales', this)">💰 Sotuv Bo'limi</div>
             <div class="nav-item" onclick="Core.view('nasiya', this)">🤝 Mijoz Nasiyalari</div>
-            <div class="nav-item" onclick="Core.view('hr', this)">👥 Xodimlar va Maosh</div>
-            <div class="nav-item" onclick="Core.view('costs', this)">📉 Umumiy Chiqimlar</div>
-            <div class="nav-item" onclick="Core.view('archive', this)">📚 Hisobotlar Arvixi</div>
+            <div class="nav-item" onclick="Core.view('mydebts', this)">🚩 Bizning Qarzlar</div>
+            <div class="nav-item" onclick="Core.view('hr', this)">👥 Xodimlar & Maosh</div>
+            <div class="nav-item" onclick="Core.view('costs', this)">📉 Operatsion Chiqimlar</div>
+            <div class="nav-item" onclick="Core.view('archive', this)">📚 Arxiv Hisobotlari</div>
             <div class="nav-item" onclick="Core.view('settings', this)">⚙️ Tizim Sozlamalari</div>
         </div>
-        <div style="padding: 25px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <button class="btn btn-d" style="width: 100%;" onclick="Core.closeDay()">🔒 KUNNI YOPISH</button>
+        <div style="padding:20px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <button class="btn btn-d" style="width:100%" onclick="Core.closeDay()">📅 ISH KUNINI YOPISH</button>
         </div>
     </div>
 
     <div class="main-engine">
         <div class="top-bar">
-            <h3 id="view-title">Dashboard Control</h3>
-            <div style="text-align: right;">
-                <div id="clock-digital">00:00:00</div>
-                <div id="date-label" style="font-size: 12px; color: var(--text-muted); font-weight: 700;">...</div>
+            <div>
+                <h3 id="view-title" style="font-weight:800; color:var(--sidebar); font-size:22px;">Dashboard</h3>
+                <span id="breadcrumb" style="font-size:11px; color:var(--text-muted); text-transform:uppercase;">Asosiy panel / Analitika</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div style="text-align:right">
+                    <div id="clock-digital" style="font-size:22px; font-weight:900; color:var(--primary); line-height:1;">00:00:00</div>
+                    <div id="date-label" style="font-size:12px; color:var(--text-muted); font-weight:600;">...</div>
+                </div>
             </div>
         </div>
 
         <div class="workspace">
-
+            
             <div id="v-dash" class="view">
                 <div class="stat-grid">
-                    <div class="card-stat" style="border-bottom-color: var(--success)">
-                        <span>💵 Kassadagi Naqd Pul</span>
-                        <h2 id="st-kassa">0 UZS</h2>
+                    <div class="card-stat" style="border-right: 4px solid var(--success)">
+                        <span>💸 Kassadagi Naqd</span>
+                        <h2 id="st-kassa">0</h2>
+                        <div style="font-size:10px; color:var(--success); margin-top:5px;">↑ Real vaqt rejimi</div>
                     </div>
-                    <div class="stat-card card-stat" style="border-bottom-color: var(--primary)">
-                        <span>🏗️ Ombor Umumiy Qiymati</span>
-                        <h2 id="st-ombor">0 UZS</h2>
+                    <div class="card-stat" style="border-right: 4px solid var(--primary)">
+                        <span>🏗️ Ombor Qiymati</span>
+                        <h2 id="st-ombor">0</h2>
+                        <div style="font-size:10px; color:var(--text-muted); margin-top:5px;">Tannarx asosida</div>
                     </div>
-                    <div class="card-stat" style="border-bottom-color: var(--warning)">
-                        <span>🚀 Bugungi Sof Foyda</span>
-                        <h2 id="st-profit">0 UZS</h2>
+                    <div class="card-stat" style="border-right: 4px solid var(--warning)">
+                        <span>📈 Sof Foyda</span>
+                        <h2 id="st-profit">0</h2>
+                        <div style="font-size:10px; color:var(--warning); margin-top:5px;">Bugungi ko'rsatkich</div>
                     </div>
-                    <div class="card-stat" style="border-bottom-color: var(--danger)">
-                        <span>🚩 To'lanmagan Nasiyalar</span>
-                        <h2 id="st-nasiya">0 UZS</h2>
+                    <div class="card-stat" style="border-right: 4px solid var(--danger)">
+                        <span>📉 Qarzlar (Mijoz)</span>
+                        <h2 id="st-nasiya">0</h2>
+                        <div style="font-size:10px; color:var(--danger); margin-top:5px;">Yopilmagan nasiyalar</div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:25px;">
                     <div class="module-card">
                         <div class="module-header">
-                            <h4>🏗️ Mahsulotlar Monitori</h4>
-                            <button class="btn btn-p btn-sm" onclick="Core.exportTable('dash-table')">Excelga Yuklash</button>
+                            <h4>🛡️ Aktiv Mahsulotlar Ro'yxati</h4>
                         </div>
                         <div class="table-container">
-                            <table id="dash-table">
-                                <thead><tr><th>Mahsulot Nomi</th><th>Vazn</th><th>Tannarx</th><th>Jami Qiymat</th></tr></thead>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Mahsulot</th>
+                                        <th>Qoldiq (Vazn)</th>
+                                        <th>Tannarx</th>
+                                        <th>Jami Qiymat</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="dash-tbody"></tbody>
                             </table>
                         </div>
                     </div>
                     <div class="module-card">
-                        <div class="module-header"><h4>🚨 Ombor Holati</h4></div>
-                        <div id="stock-alerts"></div>
+                        <div class="module-header"><h4>⚠️ Zaxira Ogohlantiruvi</h4></div>
+                        <div id="stock-alerts" style="display:flex; flex-direction:column; gap:15px;"></div>
                     </div>
                 </div>
             </div>
 
             <div id="v-warehouse" class="view hidden">
                 <div class="module-card">
-                    <div class="module-header"><h4>📦 Yuk Kirim Qilish (In-stock)</h4></div>
+                    <div class="module-header"><h4>📥 Yangi Yuk Kirim Qilish</h4></div>
                     <div class="input-grid">
-                        <div class="field"><label>Mahsulot Nomi</label><input type="text" id="w-name"></div>
-                        <div class="field"><label>Vazni (kg)</label><input type="number" id="w-qty"></div>
-                        <div class="field"><label>Sotib Olingan Narx (1kg)</label><input type="number" id="w-cost"></div>
+                        <div class="field"><label>Mahsulot Nomi</label><input type="text" id="w-name" placeholder="Masalan: Armatura 12"></div>
+                        <div class="field"><label>Vazni (Kg)</label><input type="number" id="w-qty" placeholder="0.00"></div>
+                        <div class="field"><label>Tannarx (1 Kg)</label><input type="number" id="w-cost" placeholder="0.00"></div>
                         <div class="field" style="display:flex; align-items:flex-end;">
-                            <button class="btn btn-s" style="width:100%" onclick="Core.addWarehouse()">KIRIM QILISH</button>
+                            <button class="btn btn-s" style="width:100%" onclick="Core.addWarehouse()">📦 KIRIM QILISH</button>
                         </div>
                     </div>
-                    <div class="module-header">
-                        <input type="text" placeholder="Qidiruv..." style="max-width:300px;" onkeyup="Core.search(this, 'warehouse-tbody')">
-                        <button class="btn btn-p btn-sm" onclick="Core.exportTable('warehouse-table')">Excel Yuklash</button>
-                    </div>
                     <div class="table-container">
-                        <table id="warehouse-table">
-                            <thead><tr><th>Nomi</th><th>Vazni</th><th>Tannarx</th><th>Qiymati</th><th>O'chirish</th></tr></thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nomi</th>
+                                    <th>Joriy Vazn</th>
+                                    <th>Oxirgi Tannarx</th>
+                                    <th>Umumiy Summa</th>
+                                    <th>Harakat</th>
+                                </tr>
+                            </thead>
                             <tbody id="warehouse-tbody"></tbody>
                         </table>
                     </div>
@@ -238,52 +310,27 @@
 
             <div id="v-sales" class="view hidden">
                 <div class="module-card">
-                    <div class="module-header"><h4>💰 Yangi Sotuv Operatsiyasi</h4></div>
+                    <div class="module-header"><h4>🛒 Tezkor Sotuv</h4></div>
                     <div class="input-grid">
-                        <div class="field"><label>Tanlang</label><select id="s-list"></select></div>
-                        <div class="field"><label>Sotiladigan Vazn</label><input type="number" id="s-qty"></div>
-                        <div class="field"><label>Sotuv Narxi (1kg)</label><input type="number" id="s-price"></div>
+                        <div class="field"><label>Mahsulotni Tanlang</label><select id="s-list"></select></div>
+                        <div class="field"><label>Sotuv Vazni</label><input type="number" id="s-qty" placeholder="0.00"></div>
+                        <div class="field"><label>Sotuv Narxi (1kg)</label><input type="number" id="s-price" placeholder="0.00"></div>
                         <div class="field" style="display:flex; align-items:flex-end;">
-                            <button class="btn btn-p" style="width:100%" onclick="Core.addSale()">SOTUVNI TASDIQLASH</button>
+                            <button class="btn btn-p" style="width:100%" onclick="Core.addSale()">💰 SOTUVNI YAKUNLASH</button>
                         </div>
                     </div>
                     <div class="table-container">
-                        <table id="sales-table">
-                            <thead><tr><th>Vaqt</th><th>Mahsulot</th><th>Vazn</th><th>Jami</th><th>Sof Foyda</th></tr></thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Vaqt</th>
+                                    <th>Mahsulot</th>
+                                    <th>Vazn</th>
+                                    <th>Jami Summa</th>
+                                    <th>Sof Foyda</th>
+                                </tr>
+                            </thead>
                             <tbody id="sales-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="v-hr" class="view hidden">
-                <div class="module-card">
-                    <div class="module-header"><h4>👥 Xodimlar va Maosh Boshqaruvi</h4></div>
-                    <div class="input-grid">
-                        <div class="field"><label>Ism Familiya</label><input type="text" id="hr-name"></div>
-                        <div class="field"><label>Oylik Maoshi</label><input type="number" id="hr-sal"></div>
-                        <div class="field" style="display:flex; align-items:flex-end;">
-                            <button class="btn btn-s" style="width:100%" onclick="Core.addWorker()">XODIMNI QO'SHISH</button>
-                        </div>
-                    </div>
-                    <div class="worker-layout" id="hr-display"></div>
-                </div>
-            </div>
-
-            <div id="v-costs" class="view hidden">
-                <div class="module-card">
-                    <div class="module-header"><h4>📉 Boshqa Barcha Chiqimlar</h4></div>
-                    <div class="input-grid">
-                        <div class="field"><label>Chiqim Maqsadi</label><input type="text" id="c-note"></div>
-                        <div class="field"><label>Summa</label><input type="number" id="c-sum"></div>
-                        <div class="field" style="display:flex; align-items:flex-end;">
-                            <button class="btn btn-d" style="width:100%" onclick="Core.addCost()">CHIQIMNI SAQLASH</button>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table id="costs-table">
-                            <thead><tr><th>Sana</th><th>Maqsadi</th><th>Summa</th><th>O'chirish</th></tr></thead>
-                            <tbody id="costs-tbody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -291,20 +338,102 @@
 
             <div id="v-nasiya" class="view hidden">
                 <div class="module-card">
-                    <div class="module-header"><h4>🤝 Mijoz Nasiya Shartnomalari</h4></div>
+                    <div class="module-header"><h4>🤝 Mijozga Nasiya Berish</h4></div>
                     <div class="input-grid">
-                        <div class="field"><label>Mijoz Ismi</label><input type="text" id="n-client"></div>
+                        <div class="field"><label>Mijoz Ism/Firma</label><input type="text" id="n-client"></div>
                         <div class="field"><label>Mahsulot</label><select id="n-list"></select></div>
                         <div class="field"><label>Vazn</label><input type="number" id="n-qty"></div>
-                        <div class="field"><label>Umumiy Qarz Summasi</label><input type="number" id="n-total"></div>
+                        <div class="field"><label>Umumiy Summa</label><input type="number" id="n-total"></div>
                         <div class="field" style="display:flex; align-items:flex-end;">
-                            <button class="btn btn-w" style="width:100%" onclick="Core.addNasiya()">NASIYA BERISH</button>
+                            <button class="btn btn-w" style="width:100%" onclick="Core.addNasiya()">📑 NASIYA QAYD ETISH</button>
                         </div>
                     </div>
                     <div class="table-container">
-                        <table id="nasiya-table">
-                            <thead><tr><th>Sana</th><th>Mijoz</th><th>Narsa</th><th>Summa</th><th>Holat</th><th>Amal</th></tr></thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sana</th>
+                                    <th>Mijoz</th>
+                                    <th>Mahsulot</th>
+                                    <th>Summa</th>
+                                    <th>Holat</th>
+                                    <th>Amal</th>
+                                </tr>
+                            </thead>
                             <tbody id="nasiya-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="v-mydebts" class="view hidden">
+                <div class="module-card">
+                    <div class="module-header"><h4>🚩 Ta'minotchidan Qarzga Yuk Olish</h4></div>
+                    <div class="input-grid">
+                        <div class="field"><label>Ta'minotchi (Firma)</label><input type="text" id="md-firm"></div>
+                        <div class="field"><label>Nima olindi?</label><input type="text" id="md-item"></div>
+                        <div class="field"><label>Vazni (kg)</label><input type="number" id="md-qty" oninput="Core.calcMyDebt()"></div>
+                        <div class="field"><label>Narxi (1kg)</label><input type="number" id="md-price" oninput="Core.calcMyDebt()"></div>
+                        <div class="field"><label>Jami Summa</label><input type="number" id="md-total" readonly style="background:#eee"></div>
+                        <div class="field" style="display:flex; align-items:flex-end;">
+                            <button class="btn btn-d" style="width:100%" onclick="Core.addMyDebt()">📦 QARZGA YUK OLISH</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sana</th>
+                                    <th>Firma</th>
+                                    <th>Mahsulot</th>
+                                    <th>Vazn</th>
+                                    <th>Jami</th>
+                                    <th>To'langan</th>
+                                    <th>Holat</th>
+                                    <th>Amal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mydebts-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="v-hr" class="view hidden">
+                <div class="module-card">
+                    <div class="module-header"><h4>👥 Jamoa Boshqaruvi</h4></div>
+                    <div class="input-grid">
+                        <div class="field"><label>Xodim Ismi</label><input type="text" id="hr-name"></div>
+                        <div class="field"><label>Belgilangan Oylik</label><input type="number" id="hr-sal"></div>
+                        <div class="field" style="display:flex; align-items:flex-end;">
+                            <button class="btn btn-s" style="width:100%" onclick="Core.addWorker()">➕ QO'SHISH</button>
+                        </div>
+                    </div>
+                    <div id="hr-display" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px;"></div>
+                </div>
+            </div>
+
+            <div id="v-costs" class="view hidden">
+                <div class="module-card">
+                    <div class="module-header"><h4>📉 Boshqa Chiqimlar</h4></div>
+                    <div class="input-grid">
+                        <div class="field"><label>Chiqim Sababi</label><input type="text" id="c-note" placeholder="Masalan: Svet uchun"></div>
+                        <div class="field"><label>Summa</label><input type="number" id="c-sum"></div>
+                        <div class="field" style="display:flex; align-items:flex-end;">
+                            <button class="btn btn-d" style="width:100%" onclick="Core.addCost()">💸 CHIQIM QILISH</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sana/Vaqt</th>
+                                    <th>Sabab</th>
+                                    <th>Summa</th>
+                                    <th>O'chirish</th>
+                                </tr>
+                            </thead>
+                            <tbody id="costs-tbody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -312,23 +441,26 @@
 
             <div id="v-archive" class="view hidden">
                 <div class="module-card">
-                    <div class="module-header">
-                        <h4>📚 Tarixiy Ma'lumotlar Bazasi</h4>
-                        <button class="btn btn-s btn-sm" onclick="Core.exportHistory()">Barcha Arxivni Excel Yuklash</button>
-                    </div>
-                    <div id="archive-list"></div>
+                    <div class="module-header"><h4>📚 Yopilgan Kunlar Arxivi</h4></div>
+                    <div id="archive-list" style="display:flex; flex-direction:column; gap:15px;"></div>
                 </div>
             </div>
 
             <div id="v-settings" class="view hidden">
                 <div class="module-card">
-                    <h4>⚙️ Tizim Sozlamalari</h4>
-                    <div style="max-width: 450px; margin-top: 30px;">
-                        <label style="font-weight:800; display:block; margin-bottom:10px;">Xavfsizlik: Yangi PIN-Kod</label>
-                        <input type="password" id="new-pin" maxlength="4" style="margin-bottom:20px;">
-                        <button class="btn btn-p" onclick="Core.updatePin()">PINNI YANGILASH</button>
-                        <hr style="margin:40px 0; opacity:0.1;">
-                        <button class="btn btn-d" style="width:100%" onclick="Core.resetSystem()">TIZIMNI TO'LIQ RESET QILISH (Barcha ma'lumotlar o'chadi)</button>
+                    <h4>⚙️ Xavfsizlik va Sozlamalar</h4>
+                    <div style="max-width:400px; margin-top:25px;">
+                        <div class="field">
+                            <label>Yangi Kirish PIN-kodi (4 ta raqam)</label>
+                            <input type="password" id="new-pin" maxlength="4">
+                        </div>
+                        <button class="btn btn-p" style="margin-top:15px;" onclick="Core.updatePin()">KODNI YANGILASH</button>
+                        
+                        <div style="margin-top:50px; padding:20px; border:1px solid #fee2e2; border-radius:15px;">
+                            <h5 style="color:var(--danger)">Xavfli Hudud</h5>
+                            <p style="font-size:12px; color:var(--text-muted); margin:10px 0;">Barcha ma'lumotlarni butunlay o'chirib tashlash.</p>
+                            <button class="btn btn-d" onclick="Core.resetSystem()">SISTEMANI RESET QILISH</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -337,322 +469,467 @@
     </div>
 
     <script>
+        /**
+         * CORE SYSTEM OBJECT
+         * All logic is contained within this module to prevent global scope pollution
+         */
         const Core = {
-            db: JSON.parse(localStorage.getItem('steel_v25_db')) || {
+            // DATABASE INITIALIZATION
+            db: JSON.parse(localStorage.getItem('steel_v26_db')) || {
                 pin: "0303",
                 kassa: 0,
                 warehouse: [],
                 sales: [],
                 nasiya: [],
                 workers: [],
-                costs: []
+                costs: [],
+                mydebts: []
             },
 
+            // PERSISTENCE
             save: function() {
-                localStorage.setItem('steel_v25_db', JSON.stringify(this.db));
+                localStorage.setItem('steel_v26_db', JSON.stringify(this.db));
                 this.render();
             },
 
+            // UTILS
             format: n => new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0)) + ' UZS',
-
+            
+            // AUTHENTICATION LOGIC
             unlock: function() {
-                if(document.getElementById('sys-pin').value === this.db.pin) {
+                const input = document.getElementById('sys-pin');
+                if(input.value === this.db.pin) {
                     document.getElementById('auth-screen').style.transform = 'translateY(-100%)';
+                    setTimeout(() => document.getElementById('auth-screen').style.display = 'none', 800);
                     this.init();
-                } else alert("RUXSAT BERILMADI: PIN XATO!");
+                } else {
+                    document.getElementById('auth-error').style.display = 'block';
+                    input.value = "";
+                }
             },
 
+            // INITIALIZATION
+            init: function() {
+                this.render();
+                // Clock Engine
+                setInterval(() => {
+                    const now = new Date();
+                    document.getElementById('clock-digital').innerText = now.toLocaleTimeString();
+                    document.getElementById('date-label').innerText = now.toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                }, 1000);
+            },
+
+            // VIEW NAVIGATION
             view: function(id, el) {
                 document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
                 document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                document.getElementById('v-'+id).classList.remove('hidden');
+                
+                document.getElementById('v-' + id).classList.remove('hidden');
                 el.classList.add('active');
-                document.getElementById('view-title').innerText = el.innerText;
+                
+                document.getElementById('view-title').innerText = el.innerText.split(' ').slice(1).join(' ');
+                document.getElementById('breadcrumb').innerText = `Asosiy Panel / ${el.innerText.split(' ').slice(1).join(' ')}`;
+                
                 if(id === 'archive') this.renderHistory();
             },
 
-            // OMBOR MANTIQLARI
+            // WAREHOUSE LOGIC
             addWarehouse: function() {
-                const name = document.getElementById('w-name').value;
+                const name = document.getElementById('w-name').value.trim();
                 const qty = parseFloat(document.getElementById('w-qty').value);
                 const cost = parseFloat(document.getElementById('w-cost').value);
-                if(!name || isNaN(qty) || isNaN(cost)) return alert("Ma'lumotlarni to'ldiring!");
+
+                if(!name || isNaN(qty) || isNaN(cost)) return alert("Barcha maydonlarni to'ldiring!");
 
                 let item = this.db.warehouse.find(x => x.name.toLowerCase() === name.toLowerCase());
                 if(item) {
+                    // Update existing
                     item.qty += qty;
-                    item.cost = cost; 
+                    item.cost = cost; // Update to latest price
                 } else {
+                    // Create new
                     this.db.warehouse.push({ name, qty, cost, initial: qty });
                 }
 
-                ['w-name','w-qty','w-cost'].forEach(id => document.getElementById(id).value = '');
+                ['w-name', 'w-qty', 'w-cost'].forEach(id => document.getElementById(id).value = '');
                 this.save();
             },
 
-            // SAVDO MANTIQLARI
+            // SALES LOGIC
             addSale: function() {
                 const idx = document.getElementById('s-list').value;
                 const qty = parseFloat(document.getElementById('s-qty').value);
                 const price = parseFloat(document.getElementById('s-price').value);
 
-                if(idx === "" || isNaN(qty)) return alert("Sotuv ma'lumotlari xato!");
-                const product = this.db.warehouse[idx];
-                if(product.qty < qty) return alert("Omborda yuk kam!");
+                if(idx === "" || isNaN(qty) || isNaN(price)) return alert("Sotuv ma'lumotlari xato!");
+
+                const prod = this.db.warehouse[idx];
+                if(prod.qty < qty) return alert("Omborda yetarli mahsulot yo'q!");
 
                 const total = qty * price;
-                const profit = (price - product.cost) * qty;
+                const profit = (price - prod.cost) * qty;
 
                 this.db.sales.unshift({
-                    name: product.name,
-                    qty: qty,
-                    total: total,
-                    profit: profit,
+                    name: prod.name,
+                    qty,
+                    total,
+                    profit,
                     time: new Date().toLocaleTimeString()
                 });
 
                 this.db.kassa += total;
-                product.qty -= qty;
-                ['s-qty','s-price'].forEach(id => document.getElementById(id).value = '');
+                prod.qty -= qty;
+
+                ['s-qty', 's-price'].forEach(id => document.getElementById(id).value = '');
                 this.save();
             },
 
-            // HR (XODIMLAR)
-            addWorker: function() {
-                const name = document.getElementById('hr-name').value;
-                const sal = parseFloat(document.getElementById('hr-sal').value);
-                if(!name || isNaN(sal)) return;
-                this.db.workers.push({ name, salary: sal, paid: 0 });
-                document.getElementById('hr-name').value = '';
-                document.getElementById('hr-sal').value = '';
-                this.save();
+            // OUR DEBTS (MYDEBTS) - LOGIC
+            calcMyDebt: function() {
+                const q = parseFloat(document.getElementById('md-qty').value) || 0;
+                const p = parseFloat(document.getElementById('md-price').value) || 0;
+                document.getElementById('md-total').value = Math.round(q * p);
             },
 
-            payWorker: function(idx) {
-                const amount = parseFloat(prompt("Xodimga beriladigan summa:"));
-                if(isNaN(amount) || amount > this.db.kassa) return alert("Xato yoki kassa yetarli emas!");
+            addMyDebt: function() {
+                const firm = document.getElementById('md-firm').value.trim();
+                const item = document.getElementById('md-item').value.trim();
+                const qty = parseFloat(document.getElementById('md-qty').value);
+                const price = parseFloat(document.getElementById('md-price').value);
+                const total = parseFloat(document.getElementById('md-total').value);
 
-                const w = this.db.workers[idx];
-                w.paid += amount;
+                if(!firm || !item || isNaN(total)) return alert("Qarz ma'lumotlari chala!");
+
+                this.db.mydebts.unshift({
+                    firm, item, qty, price, total,
+                    paidAmount: 0,
+                    date: new Date().toLocaleDateString(),
+                    status: 'QARZ'
+                });
+
+                // AUTO-WAREHOUSE INTEGRATION
+                let wItem = this.db.warehouse.find(x => x.name.toLowerCase() === item.toLowerCase());
+                if(wItem) {
+                    wItem.qty += qty;
+                    wItem.cost = price;
+                } else {
+                    this.db.warehouse.push({ name: item, qty: qty, cost: price, initial: qty });
+                }
+
+                ['md-firm', 'md-item', 'md-qty', 'md-price', 'md-total'].forEach(id => document.getElementById(id).value = '');
+                this.save();
+                alert("Yuk qabul qilindi: Omborga qo'shildi va qarz yozildi.");
+            },
+
+            payMyDebt: function(idx) {
+                const d = this.db.mydebts[idx];
+                const rest = d.total - d.paidAmount;
+                const amount = parseFloat(prompt(`To'lov summasini kiriting (Qolgan: ${this.format(rest)})`, rest));
+
+                if(isNaN(amount) || amount <= 0) return;
+                if(amount > this.db.kassa) return alert("Kassada pul yetarli emas!");
+
+                d.paidAmount += amount;
                 this.db.kassa -= amount;
-                
-                // Chiqimlarga ham qo'shish
+
+                // Chiqimlarga yozish
                 this.db.costs.unshift({
                     date: new Date().toLocaleString(),
-                    note: `OYLIK: ${w.name}`,
+                    note: `QARZ TO'LOV: ${d.firm} (${d.item})`,
                     sum: amount
                 });
+
+                if(d.paidAmount >= d.total) d.status = 'TOLANDI';
                 this.save();
             },
 
-            // CHIQIMLAR
-            addCost: function() {
-                const note = document.getElementById('c-note').value;
-                const sum = parseFloat(document.getElementById('c-sum').value);
-                if(!note || isNaN(sum) || sum > this.db.kassa) return alert("Xatolik!");
-
-                this.db.costs.unshift({ date: new Date().toLocaleString(), note, sum });
-                this.db.kassa -= sum;
-                document.getElementById('c-note').value = '';
-                document.getElementById('c-sum').value = '';
-                this.save();
-            },
-
-            // NASIYA
+            // NASIYA LOGIC (FOR CUSTOMERS)
             addNasiya: function() {
-                const client = document.getElementById('n-client').value;
+                const client = document.getElementById('n-client').value.trim();
                 const idx = document.getElementById('n-list').value;
                 const qty = parseFloat(document.getElementById('n-qty').value);
                 const total = parseFloat(document.getElementById('n-total').value);
 
-                if(!client || idx === "" || isNaN(total)) return;
-                const product = this.db.warehouse[idx];
+                if(!client || idx === "" || isNaN(total)) return alert("Nasiya ma'lumotlari xato!");
+
+                const prod = this.db.warehouse[idx];
+                if(prod.qty < qty) return alert("Omborda yuk yetarli emas!");
+
                 this.db.nasiya.unshift({
-                    client, product: product.name, qty, total,
-                    date: new Date().toLocaleDateString(), paid: false
+                    client,
+                    product: prod.name,
+                    qty,
+                    total,
+                    date: new Date().toLocaleDateString(),
+                    paid: false
                 });
-                product.qty -= qty;
+
+                prod.qty -= qty;
+                ['n-client', 'n-qty', 'n-total'].forEach(id => document.getElementById(id).value = '');
                 this.save();
             },
 
             closeNasiya: function(idx) {
                 const n = this.db.nasiya[idx];
-                if(confirm("Pul to'liq olindimi?")) {
-                    this.db.kassa += n.total;
-                    n.paid = true;
+                this.db.kassa += n.total;
+                n.paid = true;
+                this.save();
+            },
+
+            // HR LOGIC
+            addWorker: function() {
+                const name = document.getElementById('hr-name').value.trim();
+                const salary = parseFloat(document.getElementById('hr-sal').value);
+                if(!name || isNaN(salary)) return;
+                this.db.workers.push({ name, salary, paid: 0 });
+                ['hr-name', 'hr-sal'].forEach(id => document.getElementById(id).value = '');
+                this.save();
+            },
+
+            payWorker: function(idx) {
+                const w = this.db.workers[idx];
+                const amount = parseFloat(prompt(`${w.name} uchun to'lov summasi:`));
+                if(isNaN(amount) || amount <= 0) return;
+                if(amount > this.db.kassa) return alert("Kassada pul yo'q!");
+
+                w.paid += amount;
+                this.db.kassa -= amount;
+                this.db.costs.unshift({
+                    date: new Date().toLocaleString(),
+                    note: `ISH HAQI: ${w.name}`,
+                    sum: amount
+                });
+                this.save();
+            },
+
+            // OPERATIONAL COSTS
+            addCost: function() {
+                const note = document.getElementById('c-note').value.trim();
+                const sum = parseFloat(document.getElementById('c-sum').value);
+                if(!note || isNaN(sum)) return;
+                if(sum > this.db.kassa) return alert("Kassada mablag' yetarli emas!");
+
+                this.db.costs.unshift({
+                    date: new Date().toLocaleString(),
+                    note,
+                    sum
+                });
+                this.db.kassa -= sum;
+                ['c-note', 'c-sum'].forEach(id => document.getElementById(id).value = '');
+                this.save();
+            },
+
+            // DELETE ITEM
+            del: function(key, idx) {
+                if(confirm("Ushbu ma'lumot o'chirib tashlansinmi?")) {
+                    this.db[key].splice(idx, 1);
                     this.save();
                 }
             },
 
-            // GLOBAL RENDER (TIZIMNI CHIZISH)
+            // RENDER SYSTEM
             render: function() {
-                // STATS
-                let warehouseValue = 0;
-                this.db.warehouse.forEach(i => warehouseValue += (i.qty * i.cost));
-                let totalProfit = 0;
-                this.db.sales.forEach(i => totalProfit += i.profit);
-                let debtValue = 0;
-                this.db.nasiya.forEach(i => { if(!i.paid) debtValue += i.total });
+                // Calculation engine
+                let whTotalVal = 0;
+                this.db.warehouse.forEach(i => whTotalVal += (i.qty * i.cost));
 
+                let dayProfit = 0;
+                this.db.sales.forEach(i => dayProfit += i.profit);
+
+                let clientNasiya = 0;
+                this.db.nasiya.forEach(i => { if(!i.paid) clientNasiya += i.total; });
+
+                // UI Stats
                 document.getElementById('st-kassa').innerText = this.format(this.db.kassa);
-                document.getElementById('st-ombor').innerText = this.format(warehouseValue);
-                document.getElementById('st-profit').innerText = this.format(totalProfit);
-                document.getElementById('st-nasiya').innerText = this.format(debtValue);
+                document.getElementById('st-ombor').innerText = this.format(whTotalVal);
+                document.getElementById('st-profit').innerText = this.format(dayProfit);
+                document.getElementById('st-nasiya').innerText = this.format(clientNasiya);
 
-                // TABLES
-                const dBody = document.getElementById('dash-tbody');
+                // Warehouse Rendering
                 const wBody = document.getElementById('warehouse-tbody');
+                const dBody = document.getElementById('dash-tbody');
                 const alerts = document.getElementById('stock-alerts');
-                dBody.innerHTML = wBody.innerHTML = alerts.innerHTML = "";
+                
+                wBody.innerHTML = dBody.innerHTML = alerts.innerHTML = "";
 
                 this.db.warehouse.forEach((item, x) => {
-                    const row = `<tr><td>${item.name}</td><td>${item.qty} kg</td><td>${this.format(item.cost)}</td><td>${this.format(item.qty*item.cost)}</td><td><button class="btn btn-d btn-sm" onclick="Core.del('warehouse', ${x})">X</button></td></tr>`;
+                    const row = `
+                        <tr>
+                            <td><b>${item.name}</b></td>
+                            <td>${item.qty} kg</td>
+                            <td>${this.format(item.cost)}</td>
+                            <td>${this.format(item.qty * item.cost)}</td>
+                            <td><button class="btn btn-d btn-sm" onclick="Core.del('warehouse', ${x})">O'chirish</button></td>
+                        </tr>
+                    `;
                     wBody.innerHTML += row;
+
                     if(item.qty > 0) {
-                        dBody.innerHTML += `<tr><td>${item.name}</td><td>${item.qty} kg</td><td>${this.format(item.cost)}</td><td>${this.format(item.qty*item.cost)}</td></tr>`;
-                        const p = (item.qty / (item.initial || item.qty)) * 100;
-                        alerts.innerHTML += `
-                            <div style="margin-bottom:15px;">
-                                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800;">
-                                    <span>${item.name}</span><span>${item.qty} kg</span>
+                        dBody.innerHTML += `<tr><td>${item.name}</td><td>${item.qty} kg</td><td>${this.format(item.cost)}</td><td>${this.format(item.qty * item.cost)}</td></tr>`;
+                        
+                        // Stock warning
+                        const perc = (item.qty / (item.initial || 1000)) * 100;
+                        if(perc < 20) {
+                            alerts.innerHTML += `
+                                <div style="background:#fff5f5; padding:10px; border-radius:10px; border-left:4px solid var(--danger)">
+                                    <small style="font-weight:800; color:var(--danger)">KAMAYIB KETDI!</small><br>
+                                    <span style="font-size:13px;">${item.name}: ${item.qty} kg qoldi</span>
+                                    <div class="stock-progress"><div class="progress-fill" style="width:${perc}%; background:var(--danger)"></div></div>
                                 </div>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width:${p}%; background:${p < 20 ? 'var(--danger)' : 'var(--success)'}"></div>
-                                </div>
-                            </div>`;
+                            `;
+                        }
                     }
                 });
 
-                // SALES
-                document.getElementById('sales-tbody').innerHTML = this.db.sales.map(s => `<tr><td>${s.time}</td><td>${s.name}</td><td>${s.qty}</td><td>${this.format(s.total)}</td><td style="color:green">+${this.format(s.profit)}</td></tr>`).join('');
+                // Sales Rendering
+                document.getElementById('sales-tbody').innerHTML = this.db.sales.map(s => `
+                    <tr>
+                        <td>${s.time}</td>
+                        <td>${s.name}</td>
+                        <td>${s.qty} kg</td>
+                        <td>${this.format(s.total)}</td>
+                        <td style="color:var(--success); font-weight:800">+${this.format(s.profit)}</td>
+                    </tr>
+                `).join('');
 
-                // COSTS
-                document.getElementById('costs-tbody').innerHTML = this.db.costs.map((c, x) => `<tr><td>${c.date}</td><td>${c.note}</td><td>${this.format(c.sum)}</td><td><button class="btn btn-d btn-sm" onclick="Core.del('costs', ${x})">X</button></td></tr>`).join('');
-
-                // HR
-                const hrDisplay = document.getElementById('hr-display');
-                hrDisplay.innerHTML = "";
-                this.db.workers.forEach((w, x) => {
-                    hrDisplay.innerHTML += `
-                        <div class="worker-card">
-                            <h4>${w.name}</h4>
-                            <p style="font-size:13px; margin-bottom:10px;">Maoshi: ${this.format(w.salary)}</p>
-                            <p style="font-size:13px; color:var(--success)">Berildi: ${this.format(w.paid)}</p>
-                            <p style="font-size:13px; color:var(--danger)">Qoldi: ${this.format(w.salary - w.paid)}</p>
-                            <button class="btn btn-p btn-sm" style="width:100%; margin-top:15px;" onclick="Core.payWorker(${x})">MAOSH TO'LASH</button>
-                        </div>`;
-                });
-
-                // NASIYA
+                // Nasiya Rendering
                 document.getElementById('nasiya-tbody').innerHTML = this.db.nasiya.map((n, x) => `
                     <tr>
-                        <td>${n.date}</td><td>${n.client}</td><td>${n.product}</td><td>${this.format(n.total)}</td>
-                        <td><span class="badge ${n.paid ? 'badge-green':'badge-red'}">${n.paid ? 'YOPILGAN':'QARZ'}</span></td>
-                        <td>${!n.paid ? `<button class="btn btn-s btn-sm" onclick="Core.closeNasiya(${x})">PUL OLINDI</button>` : '---'}</td>
-                    </tr>`).join('');
+                        <td>${n.date}</td>
+                        <td><b>${n.client}</b></td>
+                        <td>${n.product} (${n.qty} kg)</td>
+                        <td style="color:var(--danger)">${this.format(n.total)}</td>
+                        <td><span class="badge ${n.paid?'badge-green':'badge-red'}">${n.paid?'YOPILDI':'QARZDOR'}</span></td>
+                        <td>${!n.paid ? `<button class="btn btn-s btn-sm" onclick="Core.closeNasiya(${x})">PUL OLINDI</button>` : '✅'}</td>
+                    </tr>
+                `).join('');
 
-                // SELECTS
-                const sSelect = document.getElementById('s-list');
-                const nSelect = document.getElementById('n-list');
-                sSelect.innerHTML = nSelect.innerHTML = '<option value="">Tanlang...</option>';
+                // MyDebts Rendering
+                document.getElementById('mydebts-tbody').innerHTML = this.db.mydebts.map((d, x) => `
+                    <tr style="background:${d.status === 'TOLANDI' ? '#f0fff4' : '#fff'}">
+                        <td>${d.date}</td>
+                        <td><b>${d.firm}</b></td>
+                        <td>${d.item}</td>
+                        <td>${d.qty} kg</td>
+                        <td>${this.format(d.total)}</td>
+                        <td style="color:var(--success)">${this.format(d.paidAmount)}</td>
+                        <td><span class="badge ${d.status==='TOLANDI'?'badge-green':'badge-red'}">${d.status}</span></td>
+                        <td>
+                            ${d.status !== 'TOLANDI' ? `<button class="btn btn-p btn-sm" onclick="Core.payMyDebt(${x})">TO'LASH</button>` : '✅'}
+                            <button class="btn btn-d btn-sm" onclick="Core.del('mydebts', ${x})">X</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                // HR Rendering
+                const hrD = document.getElementById('hr-display'); hrD.innerHTML = "";
+                this.db.workers.forEach((w, x) => {
+                    hrD.innerHTML += `
+                        <div class="card-stat">
+                            <h4>${w.name}</h4>
+                            <p style="font-size:12px; margin:10px 0;">Oylik: ${this.format(w.salary)}</p>
+                            <p style="font-size:12px; color:var(--success)">Berilgan: ${this.format(w.paid)}</p>
+                            <div class="stock-progress" style="height:10px;"><div class="progress-fill" style="width:${(w.paid/w.salary)*100}%; background:var(--primary)"></div></div>
+                            <button class="btn btn-p btn-sm" style="margin-top:15px; width:100%" onclick="Core.payWorker(${x})">PUL BERISH</button>
+                        </div>
+                    `;
+                });
+
+                // Costs Rendering
+                document.getElementById('costs-tbody').innerHTML = this.db.costs.map((c, x) => `
+                    <tr>
+                        <td><small>${c.date}</small></td>
+                        <td>${c.note}</td>
+                        <td style="color:var(--danger)">-${this.format(c.sum)}</td>
+                        <td><button class="btn btn-d btn-sm" onclick="Core.del('costs', ${x})">X</button></td>
+                    </tr>
+                `).join('');
+
+                // Dropdowns Update
+                const sL = document.getElementById('s-list');
+                const nL = document.getElementById('n-list');
+                sL.innerHTML = nL.innerHTML = '<option value="">-- Tanlang --</option>';
                 this.db.warehouse.forEach((item, x) => {
                     if(item.qty > 0) {
                         const opt = `<option value="${x}">${item.name} (${item.qty} kg)</option>`;
-                        sSelect.innerHTML += opt; nSelect.innerHTML += opt;
+                        sL.innerHTML += opt;
+                        nL.innerHTML += opt;
                     }
                 });
             },
 
-            // EXCEL EXPORT (CSV)
-            exportTable: function(tableId) {
-                let table = document.getElementById(tableId);
-                let rows = table.querySelectorAll('tr');
-                let csv = [];
-                for(let row of rows) {
-                    let cols = row.querySelectorAll('td, th');
-                    let rowData = [];
-                    for(let col of cols) rowData.push(col.innerText.replace(/UZS|,/g, ""));
-                    csv.push(rowData.join(","));
-                }
-                this.downloadCSV(csv.join("\n"), `${tableId}_hisobot.csv`);
-            },
-
-            downloadCSV: function(csv, filename) {
-                let blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-                let link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-            },
-
-            // CLOSE DAY & ARCHIVE
+            // ARCHIVE AND CLOSE DAY
             closeDay: function() {
-                if(!confirm("KUN YOPILSINMI? Barcha joriy savdolar arxivga o'tadi va kassa saqlanadi.")) return;
-                let history = JSON.parse(localStorage.getItem('steel_history_v25')) || [];
-                history.unshift({
-                    date: new Date().toLocaleString(),
-                    sales: this.db.sales.reduce((a,b)=>a+b.total, 0),
-                    profit: this.db.sales.reduce((a,b)=>a+b.profit, 0),
-                    costs: this.db.costs.reduce((a,b)=>a+b.sum, 0),
-                    kassa: this.db.kassa
-                });
-                localStorage.setItem('steel_history_v25', JSON.stringify(history));
-                this.db.sales = []; this.db.costs = [];
+                if(!confirm("Haqiqatan ham ish kunini yopmoqchimisiz? Bugungi sotuv va chiqimlar arxivlanadi.")) return;
+
+                const archive = JSON.parse(localStorage.getItem('steel_archive')) || [];
+                const dayData = {
+                    date: new Date().toLocaleDateString(),
+                    kassa: this.db.kassa,
+                    profit: this.db.sales.reduce((a, b) => a + b.profit, 0),
+                    salesCount: this.db.sales.length,
+                    costs: this.db.costs.reduce((a, b) => a + b.sum, 0)
+                };
+
+                archive.unshift(dayData);
+                localStorage.setItem('steel_archive', JSON.stringify(archive));
+
+                // Clear current lists but keep warehouse, debts, workers
+                this.db.sales = [];
+                this.db.costs = [];
                 this.save();
-                alert("Ish kuni muvaffaqiyatli yakunlandi!");
+                alert("Kun muvaffaqiyatli yopildi. Hisobot arxivga saqladi.");
             },
 
             renderHistory: function() {
-                const hist = JSON.parse(localStorage.getItem('steel_history_v25')) || [];
-                const cont = document.getElementById('archive-list');
-                cont.innerHTML = hist.map(h => `
-                    <div class="module-card" style="margin-bottom:15px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <b style="color:var(--primary)">📅 ${h.date}</b>
-                            <span class="badge badge-green">KASSA: ${this.format(h.kassa)}</span>
+                const archive = JSON.parse(localStorage.getItem('steel_archive')) || [];
+                const container = document.getElementById('archive-list');
+                if(archive.length === 0) {
+                    container.innerHTML = "<p style='text-align:center; padding:40px; color:#94a3b8;'>Arxiv bo'sh</p>";
+                    return;
+                }
+
+                container.innerHTML = archive.map(day => `
+                    <div class="card-stat" style="flex-direction:row; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4 style="color:var(--primary)">${day.date}</h4>
+                            <small>Sotuvlar soni: ${day.salesCount} ta</small>
                         </div>
-                        <p style="font-size:13px; color:var(--text-muted)">
-                            Sotuv: ${this.format(h.sales)} | Sof Foyda: ${this.format(h.profit)} | Chiqim: ${this.format(h.costs)}
-                        </p>
-                    </div>`).join('');
+                        <div style="text-align:right">
+                            <span style="color:var(--success)">Foyda: ${this.format(day.profit)}</span><br>
+                            <span style="color:var(--text-main)">Kassa: ${this.format(day.kassa)}</span>
+                        </div>
+                    </div>
+                `).join('');
             },
 
-            exportHistory: function() {
-                const hist = JSON.parse(localStorage.getItem('steel_history_v25')) || [];
-                let csv = "Sana,Jami Savdo,Sof Foyda,Chiqim,Kassa Holati\n";
-                hist.forEach(h => csv += `${h.date},${h.sales},${h.profit},${h.costs},${h.kassa}\n`);
-                this.downloadCSV(csv, "ERP_TO'LIQ_ARXIV.csv");
-            },
-
-            // UTILS
-            search: function(input, tbodyId) {
-                let val = input.value.toLowerCase();
-                let rows = document.getElementById(tbodyId).rows;
-                for(let row of rows) row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
-            },
-
-            del: function(type, idx) {
-                if(confirm("Ma'lumot butunlay o'chirilsinmi?")) {
-                    if(type === 'costs') this.db.kassa += this.db.costs[idx].sum;
-                    this.db[type].splice(idx, 1);
+            // SYSTEM SETTINGS
+            updatePin: function() {
+                const np = document.getElementById('new-pin').value;
+                if(np.length === 4) {
+                    this.db.pin = np;
                     this.save();
+                    alert("PIN-kod muvaffaqiyatli o'zgartirildi!");
+                } else {
+                    alert("PIN 4 ta raqam bo'lishi shart!");
                 }
             },
 
-            updatePin: function() {
-                const p = document.getElementById('new-pin').value;
-                if(p.length === 4) { this.db.pin = p; this.save(); alert("PIN YANGILANDI!"); }
-            },
-
-            resetSystem: function() { if(confirm("DIQQAT! Barcha bazani o'chirib yuborasiz!")) { localStorage.clear(); location.reload(); } },
-
-            init: function() {
-                setInterval(() => {
-                    document.getElementById('clock-digital').innerText = new Date().toLocaleTimeString();
-                    document.getElementById('date-label').innerText = new Date().toLocaleDateString('uz-UZ', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-                }, 1000);
-                this.render();
+            resetSystem: function() {
+                if(confirm("DIQQAT! Barcha ma'lumotlar o'chib ketadi. Buni qaytarib bo'lmaydi. Rozimisiz?")) {
+                    const pass = prompt("Tasdiqlash uchun 'RESET' so'zini yozing:");
+                    if(pass === "RESET") {
+                        localStorage.clear();
+                        location.reload();
+                    }
+                }
             }
+        };
+
+        // Start system on load
+        window.onload = () => {
+            // Check for existing auth session if needed, for now start at login
+            console.log("STEEL CENTER ERP V26.0 - Engine Started");
         };
     </script>
 </body>
