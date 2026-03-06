@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEEL CENTER PRODUCT | ENTERPRISE ERP v6.0</title>
+    <title>STEEL CENTER | ERP ULTIMATE v8.0</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,986 +13,889 @@
 
     <style>
         :root {
-            --steel-dark: #0f172a;
-            --steel-gray: #334155;
-            --steel-blue: #1e293b;
-            --accent: #2563eb;
-            --danger: #ef4444;
-            --success: #22c55e;
-            --border: #e2e8f0;
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: var(--steel-dark); overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; color: #1e293b; transition: all 0.3s; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
         
-        /* Sidebar Styles */
-        .sidebar { width: 280px; height: 100vh; position: fixed; left: 0; top: 0; background: var(--steel-dark); color: white; z-index: 1000; transition: all 0.3s ease; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
-        .sidebar-header { padding: 2rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-menu { padding: 1rem 0; }
-        .nav-item { padding: 14px 25px; display: flex; align-items: center; gap: 15px; color: #94a3b8; cursor: pointer; transition: 0.2s; font-size: 0.9rem; font-weight: 500; border-right: 4px solid transparent; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
-        .nav-item.active { background: rgba(37, 99, 235, 0.15); color: white; border-right: 4px solid var(--accent); }
-        .nav-item i { font-size: 1.2rem; width: 25px; text-align: center; }
+        /* Sidebar layout */
+        .sidebar { width: 280px; height: 100vh; position: fixed; background: var(--primary); color: white; z-index: 50; }
+        .nav-link { padding: 14px 24px; display: flex; align-items: center; gap: 12px; color: #94a3b8; transition: 0.2s; cursor: pointer; border-left: 4px solid transparent; }
+        .nav-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-left-color: #3b82f6; font-weight: 600; }
 
-        /* Content Area */
-        .main-content { margin-left: 280px; padding: 2.5rem; min-height: 100vh; transition: all 0.3s ease; }
+        .main-content { margin-left: 280px; padding: 2rem; min-height: 100vh; }
         
-        /* Cards */
-        .card { background: white; border-radius: 8px; border: 1px solid var(--border); padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); height: 100%; }
-        .stat-card { border-bottom: 4px solid var(--accent); }
+        /* Elements */
+        .glass-card { background: white; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow: hidden; }
+        .table-header { background: #f8fafc; text-transform: uppercase; font-size: 0.7rem; font-weight: 800; color: #64748b; letter-spacing: 0.05em; }
         
-        /* Tables */
-        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 8px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        th { background: #f8fafc; padding: 15px 20px; text-align: left; font-size: 0.75rem; font-weight: 700; color: var(--steel-gray); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
-        td { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 0.85rem; color: #475569; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background: #f8fafc; }
+        /* Status styles */
+        .low-stock { background: #fff1f2 !important; color: #e11d48 !important; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-danger { background: #fee2e2; color: #b91c1c; }
 
-        /* Stock Alerts */
-        .low-stock { background-color: #fff1f2 !important; color: #be123c !important; font-weight: 600; }
-        .stock-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
-        .badge-red { background: #fee2e2; color: #ef4444; }
-        .badge-green { background: #dcfce7; color: #22c55e; }
-
-        /* Form Elements */
-        input, select, textarea { width: 100%; padding: 10px 15px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; transition: 0.3s; background: #fff; }
-        input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--steel-gray); margin-bottom: 6px; text-transform: uppercase; }
-
-        /* Buttons */
-        .btn { padding: 12px 24px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; border: none; text-transform: uppercase; letter-spacing: 0.025em; }
-        .btn-primary { background: var(--steel-dark); color: white; }
-        .btn-primary:hover { background: #000; }
-        .btn-accent { background: var(--accent); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-success { background: var(--success); color: white; }
-
-        /* Print Settings */
+        input, select, textarea { border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; outline: none; transition: 0.2s; width: 100%; }
+        input:focus { border-color: var(--accent); ring: 3px rgba(59, 130, 246, 0.1); }
+        
+        /* Print optimization */
         @media print {
-            .sidebar, .no-print, header, .btn { display: none !important; }
-            .main-content { margin-left: 0; padding: 0; }
-            .card { border: none; box-shadow: none; }
-            .print-only { display: block !important; }
+            .no-print { display: none !important; }
+            .main-content { margin-left: 0 !important; padding: 0 !important; }
+            .glass-card { border: none !important; box-shadow: none !important; }
+            .print-area { display: block !important; }
         }
 
-        .mono { font-family: 'Roboto Mono', monospace; }
-        .hidden { display: none; }
-        
-        /* Animation */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .view { animation: fadeIn 0.4s ease-out; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[9999] flex items-center justify-center p-6">
-        <div class="bg-white rounded-2xl p-10 w-full max-w-md shadow-2xl">
+    <div id="auth-layer" class="fixed inset-0 bg-slate-900 z-[9999] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-10 shadow-2xl">
             <div class="text-center mb-10">
-                <h1 class="text-3xl font-black text-slate-800 tracking-tighter">STEEL CENTER</h1>
-                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-2">Boshqaruv Tizimiga Kirish</p>
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 rounded-2xl mb-4">
+                    <i class="fa-solid fa-shield-halved text-3xl text-blue-600"></i>
+                </div>
+                <h1 class="text-3xl font-black text-slate-900 italic tracking-tighter">STEEL ERP</h1>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Xavfsiz kirish tizimi</p>
             </div>
             <div class="space-y-6">
                 <div>
-                    <label class="text-center">Xavfsizlik PIN-Kodi</label>
-                    <input type="password" id="sys-pin" maxlength="4" class="text-center text-4xl tracking-[0.8em] py-4 border-2 border-slate-100 rounded-xl focus:border-blue-500">
+                    <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Kirish kodi (PIN)</label>
+                    <input type="password" id="pin-input" maxlength="4" class="text-center text-4xl tracking-[1em] font-black py-4 border-2 border-slate-100 rounded-2xl focus:border-blue-500">
                 </div>
-                <button onclick="Engine.authenticate()" class="w-full btn btn-primary justify-center py-5 rounded-xl text-sm">TIZIMGA KIRISH</button>
-                <p id="login-error" class="text-red-500 text-xs font-bold text-center hidden">PIN-kod noto'g'ri, qaytadan urinib ko'ring!</p>
+                <button onclick="Core.login()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-sm hover:bg-black transition-all">TIZIMGA KIRISH</button>
             </div>
         </div>
     </div>
 
-    <aside class="sidebar no-print">
-        <div class="sidebar-header">
-            <h1 class="text-2xl font-black tracking-tighter uppercase">Steel <span class="text-blue-500">Center</span></h1>
-            <p class="text-[9px] text-slate-500 font-bold tracking-[0.3em] mt-1 uppercase">Enterprise Edition</p>
+    <aside class="sidebar no-print flex flex-col">
+        <div class="p-8 border-b border-slate-800">
+            <h2 class="text-2xl font-black tracking-tighter italic">STEEL <span class="text-blue-500">CENTER</span></h2>
+            <p class="text-[8px] font-bold text-slate-500 tracking-[0.4em] uppercase mt-1">Enterprise Solution</p>
         </div>
-        <nav class="nav-menu">
-            <div class="nav-item active" onclick="UI.switchView('dashboard', this)"><i class="fa-solid fa-grid-2"></i> Dashboard</div>
-            <div class="nav-item" onclick="UI.switchView('warehouse', this)"><i class="fa-solid fa-boxes-stacked"></i> Omborxona</div>
-            <div class="nav-item" onclick="UI.switchView('sales', this)"><i class="fa-solid fa-cart-shopping"></i> Savdo Bo'limi</div>
-            <div class="nav-item" onclick="UI.switchView('nasiya', this)"><i class="fa-solid fa-hand-holding-dollar"></i> Nasiya Savdo</div>
-            <div class="nav-item" onclick="UI.switchView('firms', this)"><i class="fa-solid fa-industry"></i> Ta'minotchilar</div>
-            <div class="nav-item" onclick="UI.switchView('hr', this)"><i class="fa-solid fa-user-tie"></i> Xodimlar & Oylik</div>
-            <div class="nav-item" onclick="UI.switchView('costs', this)"><i class="fa-solid fa-wallet"></i> Chiqimlar</div>
-            <div class="nav-item" onclick="UI.switchView('calc', this)"><i class="fa-solid fa-calculator"></i> Smeta / Hisoblagich</div>
-            <div class="nav-item" onclick="UI.switchView('archive', this)"><i class="fa-solid fa-box-archive"></i> Arxiv & Excel</div>
-            <div class="nav-item" onclick="UI.switchView('settings', this)"><i class="fa-solid fa-gears"></i> Sozlamalar</div>
+        <nav class="flex-1 py-6 custom-scroll overflow-y-auto">
+            <div class="nav-link active" onclick="View.switch('dashboard', this)"><i class="fa-solid fa-house-chimney"></i> Boshqaruv</div>
+            <div class="nav-link" onclick="View.switch('warehouse', this)"><i class="fa-solid fa-cubes-stacked"></i> Omborxona</div>
+            <div class="nav-link" onclick="View.switch('pos', this)"><i class="fa-solid fa-cart-plus"></i> Sotuv Bo'limi</div>
+            <div class="nav-link" onclick="View.switch('debts', this)"><i class="fa-solid fa-hand-holding-dollar"></i> Nasiya Savdo</div>
+            <div class="nav-link" onclick="View.switch('suppliers', this)"><i class="fa-solid fa-industry"></i> Ta'minotchilar</div>
+            <div class="nav-link" onclick="View.switch('hr', this)"><i class="fa-solid fa-users-gear"></i> Xodimlar & HR</div>
+            <div class="nav-link" onclick="View.switch('expenses', this)"><i class="fa-solid fa-money-bill-transfer"></i> Xarajatlar</div>
+            <div class="nav-link" onclick="View.switch('estimate', this)"><i class="fa-solid fa-file-invoice"></i> Smeta / Kalsiyator</div>
+            <div class="nav-link" onclick="View.switch('history', this)"><i class="fa-solid fa-clock-rotate-left"></i> Arxiv & Hisobot</div>
+            <div class="nav-link" onclick="View.switch('settings', this)"><i class="fa-solid fa-gears"></i> Tizim Sozlamalari</div>
         </nav>
-        <div class="absolute bottom-6 left-6 right-6">
-            <div class="p-4 bg-slate-800 rounded-lg">
-                <p class="text-[10px] font-bold text-slate-500 uppercase">Version 6.0.4</p>
-                <p class="text-[10px] text-white mt-1">Hamma huquqlar himoyalangan.</p>
+        <div class="p-6 bg-slate-950 border-t border-slate-900">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-[10px] font-black">AD</div>
+                <div>
+                    <p class="text-[10px] font-black text-white">ADMINISTRATOR</p>
+                    <p class="text-[8px] font-bold text-slate-500">ONLINE</p>
+                </div>
             </div>
         </div>
     </aside>
 
     <main class="main-content">
-        <header class="flex justify-between items-center mb-10 no-print">
+        <header class="flex justify-between items-end mb-10 no-print">
             <div>
-                <h2 id="view-title" class="text-3xl font-black text-slate-800">Dashboard</h2>
+                <h1 id="page-title" class="text-4xl font-black text-slate-900 tracking-tight">Boshqaruv</h1>
                 <div class="flex items-center gap-4 mt-2">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest" id="header-date">--/--/----</span>
-                    <span class="h-1 w-1 bg-slate-300 rounded-full"></span>
-                    <span class="text-xs font-black text-blue-600 mono" id="digital-clock">00:00:00</span>
+                    <p id="live-date" class="text-[11px] font-bold text-slate-400 uppercase tracking-widest"></p>
+                    <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                    <p id="live-clock" class="text-[11px] font-black text-blue-600 mono"></p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right px-6 border-r border-slate-200">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase">Kassa Qoldig'i</p>
-                    <p id="header-kassa" class="text-2xl font-black mono text-slate-900">0 UZS</p>
+            <div class="flex gap-4">
+                <div class="glass-card px-8 py-4 border-r-4 border-blue-500">
+                    <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Kassa Balansi</p>
+                    <p id="kassa-val" class="text-3xl font-black mono text-slate-900">0</p>
                 </div>
-                <button onclick="Engine.closeWorkDay()" class="btn btn-danger text-[10px] px-6">Kunni Yopish</button>
+                <button onclick="Core.endDay()" class="bg-red-500 text-white px-6 rounded-xl font-black text-[10px] hover:bg-red-600 transition-all uppercase">Kunni Yopish</button>
             </div>
         </header>
 
         <div id="v-dashboard" class="view space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="card stat-card">
-                    <div class="flex justify-between items-start">
-                        <div><p class="text-[11px] font-bold text-slate-400 uppercase">Sotuvlar (Bugun)</p><h3 id="stat-revenue" class="text-2xl font-black mono mt-2 text-blue-600">0</h3></div>
-                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="grid grid-cols-4 gap-6">
+                <div class="glass-card p-6 bg-white border-b-4 border-blue-500">
+                    <div class="flex justify-between">
+                        <p class="text-[10px] font-black text-slate-400 uppercase">Bugungi Savdo</p>
+                        <i class="fa-solid fa-chart-line text-blue-100 text-xl"></i>
                     </div>
+                    <h3 id="stat-sales" class="text-2xl font-black mono mt-2">0</h3>
                 </div>
-                <div class="card stat-card" style="border-bottom-color: var(--success);">
-                    <div class="flex justify-between items-start">
-                        <div><p class="text-[11px] font-bold text-slate-400 uppercase">Sof Foyda</p><h3 id="stat-profit" class="text-2xl font-black mono mt-2 text-green-600">0</h3></div>
-                        <div class="p-2 bg-green-50 text-green-600 rounded-lg"><i class="fa-solid fa-sack-dollar"></i></div>
+                <div class="glass-card p-6 bg-white border-b-4 border-emerald-500">
+                    <div class="flex justify-between">
+                        <p class="text-[10px] font-black text-slate-400 uppercase">Bugungi Foyda</p>
+                        <i class="fa-solid fa-sack-dollar text-emerald-100 text-xl"></i>
                     </div>
+                    <h3 id="stat-profit" class="text-2xl font-black mono mt-2 text-emerald-600">0</h3>
                 </div>
-                <div class="card stat-card" style="border-bottom-color: var(--steel-dark);">
-                    <div class="flex justify-between items-start">
-                        <div><p class="text-[11px] font-bold text-slate-400 uppercase">Ombor Qiymati</p><h3 id="stat-warehouse" class="text-2xl font-black mono mt-2 text-slate-800">0</h3></div>
-                        <div class="p-2 bg-slate-100 text-slate-800 rounded-lg"><i class="fa-solid fa-warehouse"></i></div>
+                <div class="glass-card p-6 bg-white border-b-4 border-amber-500">
+                    <div class="flex justify-between">
+                        <p class="text-[10px] font-black text-slate-400 uppercase">Nasiyalar</p>
+                        <i class="fa-solid fa-file-invoice-dollar text-amber-100 text-xl"></i>
                     </div>
+                    <h3 id="stat-debts" class="text-2xl font-black mono mt-2 text-amber-600">0</h3>
                 </div>
-                <div class="card stat-card" style="border-bottom-color: var(--danger);">
-                    <div class="flex justify-between items-start">
-                        <div><p class="text-[11px] font-bold text-slate-400 uppercase">Nasiyalar</p><h3 id="stat-nasiya" class="text-2xl font-black mono mt-2 text-red-600">0</h3></div>
-                        <div class="p-2 bg-red-50 text-red-600 rounded-lg"><i class="fa-solid fa-file-invoice"></i></div>
+                <div class="glass-card p-6 bg-white border-b-4 border-slate-900">
+                    <div class="flex justify-between">
+                        <p class="text-[10px] font-black text-slate-400 uppercase">Ombor Qoldig'i</p>
+                        <i class="fa-solid fa-warehouse text-slate-100 text-xl"></i>
                     </div>
+                    <h3 id="stat-stock" class="text-2xl font-black mono mt-2">0</h3>
                 </div>
             </div>
 
             <div class="grid grid-cols-3 gap-8">
-                <div class="col-span-2 card">
-                    <h4 class="text-sm font-black uppercase mb-6 flex items-center gap-3">
-                        <span class="w-2 h-6 bg-blue-600 rounded"></span> Savdo Dinamikasi
-                    </h4>
-                    <canvas id="mainChart" height="150"></canvas>
+                <div class="col-span-2 glass-card p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h4 class="font-black text-sm uppercase tracking-tighter">Haftalik Savdo Dinamikasi</h4>
+                        <div class="flex gap-2">
+                            <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                            <span class="text-[10px] font-bold text-slate-400">NAQD SOTUV</span>
+                        </div>
+                    </div>
+                    <canvas id="mainChart" height="120"></canvas>
                 </div>
-                <div class="card bg-red-50/50 border-red-100">
-                    <h4 class="text-sm font-black uppercase text-red-600 mb-6 flex items-center gap-3">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Kritik Zaxira ( < 1000 kg)
+                <div class="glass-card p-8 bg-slate-50 border-dashed">
+                    <h4 class="font-black text-sm uppercase mb-6 flex items-center gap-2 text-red-500">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Kamaygan Mahsulotlar
                     </h4>
-                    <div id="dashboard-alerts" class="space-y-4 max-h-[400px] overflow-y-auto">
+                    <div id="stock-alerts" class="space-y-4 max-h-[400px] overflow-y-auto custom-scroll pr-2">
                         </div>
                 </div>
             </div>
         </div>
 
         <div id="v-warehouse" class="view hidden space-y-6">
-            <div class="grid grid-cols-4 gap-6">
-                <div class="card h-fit sticky top-10">
-                    <h4 class="text-sm font-black uppercase mb-6 border-b pb-4">Yangi Mahsulot</h4>
-                    <div class="space-y-5">
-                        <div><label>Nomi</label><input type="text" id="w-in-name" placeholder="Masalan: Armatura 14"></div>
-                        <div><label>Miqdori (kg)</label><input type="number" id="w-in-qty" placeholder="0.00"></div>
-                        <div><label>Tannarxi (1 kg)</label><input type="number" id="w-in-cost" placeholder="0.00"></div>
-                        <button onclick="Engine.warehouseAdd()" class="btn btn-primary w-full justify-center py-4">OMBORGA QO'SHISH</button>
-                    </div>
-                </div>
-                <div class="col-span-3 card">
-                    <div class="flex justify-between items-center mb-6">
-                        <h4 class="text-sm font-black uppercase">Mavjud Mahsulotlar Ro'yxati</h4>
-                        <div class="flex gap-4">
-                            <input type="text" onkeyup="UI.filterTable('full-warehouse-body', this.value)" placeholder="Qidirish..." class="w-64 py-2 text-xs">
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Mahsulot Nomi</th>
-                                    <th>Zaxira (kg)</th>
-                                    <th>Tannarx</th>
-                                    <th>Jami Qiymat</th>
-                                    <th class="text-right">Amallar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="full-warehouse-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="v-sales" class="view hidden space-y-6">
-            <div class="grid grid-cols-3 gap-8">
-                <div class="card h-fit bg-slate-50 border-slate-200">
-                    <h4 class="text-sm font-black uppercase mb-8">Sotuv Terminali</h4>
-                    <div class="space-y-5">
-                        <div><label>Mahsulot</label><select id="sale-product-list" onchange="Engine.calcSaleTotal()"></select></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><label>Miqdor (kg)</label><input type="number" id="sale-qty" oninput="Engine.calcSaleTotal()" placeholder="0.00"></div>
-                            <div><label>Narxi (1 kg)</label><input type="number" id="sale-price" oninput="Engine.calcSaleTotal()" placeholder="0.00"></div>
-                        </div>
-                        <div class="p-6 bg-white border-2 border-dashed border-slate-200 rounded-xl">
-                            <p class="text-[10px] font-bold text-slate-400 uppercase">Jami To'lov Summasi</p>
-                            <h2 id="sale-total-display" class="text-3xl font-black mono text-slate-900 mt-2">0 UZS</h2>
-                            <p id="sale-profit-hint" class="text-xs font-bold text-green-600 mt-2"></p>
-                        </div>
-                        <button onclick="Engine.processSale()" class="btn btn-accent w-full justify-center py-5 text-sm">SOTUVNI AMALGA OSHIRISH</button>
-                    </div>
-                </div>
-                <div class="col-span-2 card">
-                    <h4 class="text-sm font-black uppercase mb-6">Bugungi Sotuvlar Tarixi</h4>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Vaqt</th>
-                                    <th>Mahsulot</th>
-                                    <th>Miqdor</th>
-                                    <th>Summa</th>
-                                    <th>Foyda</th>
-                                    <th class="text-right">Harakat</th>
-                                </tr>
-                            </thead>
-                            <tbody id="today-sales-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="v-nasiya" class="view hidden space-y-6">
-            <div class="grid grid-cols-4 gap-6">
-                <div class="card h-fit">
-                    <h4 class="text-sm font-black uppercase mb-6">Nasiya Rasmiylashtirish</h4>
+            <div class="grid grid-cols-4 gap-8">
+                <div class="glass-card p-6 h-fit sticky top-6">
+                    <h4 class="text-xs font-black uppercase mb-6 border-b pb-4">Yangi Mahsulot Kirimi</h4>
                     <div class="space-y-4">
-                        <input type="text" id="n-client-name" placeholder="Mijoz F.I.Sh">
-                        <select id="n-product-list"></select>
-                        <input type="number" id="n-qty" placeholder="Miqdor (kg)">
-                        <input type="number" id="n-amount" placeholder="Umumiy Qarz Summasi">
-                        <textarea id="n-note" placeholder="Izoh (ixtiyoriy)"></textarea>
-                        <button onclick="Engine.addNasiya()" class="btn btn-primary w-full justify-center py-4">QARZGA BERISH</button>
+                        <div>
+                            <label class="text-[9px] font-black text-slate-400 uppercase">Mahsulot Nomi</label>
+                            <input type="text" id="w-name" placeholder="Masalan: Armatura 14mm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[9px] font-black text-slate-400 uppercase">Miqdor (kg)</label>
+                                <input type="number" id="w-qty" placeholder="0.00">
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-black text-slate-400 uppercase">Tannarx (1kg)</label>
+                                <input type="number" id="w-cost" placeholder="0.00">
+                            </div>
+                        </div>
+                        <button onclick="Warehouse.add()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs hover:bg-blue-600 transition-all">OMBORGA QABUL QILISH</button>
                     </div>
                 </div>
-                <div class="col-span-3 card">
-                    <h4 class="text-sm font-black uppercase mb-6">Faol Nasiyalar Ro'yxati</h4>
-                    <div class="table-container">
-                        <table>
-                            <thead>
+                <div class="col-span-3 glass-card">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h4 class="text-xs font-black uppercase">Mavjud Mahsulotlar</h4>
+                        <div class="w-64">
+                            <input type="text" onkeyup="Table.filter('warehouse-table', this.value)" placeholder="Qidiruv..." class="text-xs py-2">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="table-header">
                                 <tr>
-                                    <th>Sana</th>
-                                    <th>Mijoz</th>
-                                    <th>Mahsulot</th>
-                                    <th>Qarz Summasi</th>
-                                    <th>Holat</th>
-                                    <th class="text-right">Boshqaruv</th>
+                                    <th class="px-6 py-4">Mahsulot</th>
+                                    <th class="px-6 py-4">Zaxira (kg)</th>
+                                    <th class="px-6 py-4">O'rtacha Tannarx</th>
+                                    <th class="px-6 py-4">Jami Qiymat</th>
+                                    <th class="px-6 py-4 text-right">Amal</th>
                                 </tr>
                             </thead>
-                            <tbody id="nasiya-list-body"></tbody>
+                            <tbody id="warehouse-table" class="text-sm"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="v-firms" class="view hidden space-y-6">
-            <div class="card mb-6">
-                <h4 class="text-sm font-black uppercase mb-6">Ta'minotchilar Bilan Hisob-Kitob</h4>
-                <div class="grid grid-cols-5 gap-4">
-                    <input type="text" id="debt-firm" placeholder="Firma Nomi">
-                    <input type="text" id="debt-item" placeholder="Mahsulot">
-                    <input type="number" id="debt-qty" placeholder="Miqdor">
-                    <input type="number" id="debt-price" placeholder="Narxi">
-                    <button onclick="Engine.addFirmDebt()" class="btn btn-primary justify-center">QARZNI YOZISH</button>
+        <div id="v-pos" class="view hidden space-y-6">
+            <div class="grid grid-cols-3 gap-8">
+                <div class="glass-card p-8 bg-slate-900 text-white">
+                    <h4 class="text-xs font-black uppercase mb-8 text-slate-400">Yangi Sotuv Operatsiyasi</h4>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[9px] font-black text-slate-500 uppercase">Mahsulotni Tanlang</label>
+                            <select id="pos-product" onchange="Pos.updatePreview()" class="bg-slate-800 border-slate-700 text-white mt-1"></select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[9px] font-black text-slate-500 uppercase">Sotuv Miqdori (kg)</label>
+                                <input type="number" id="pos-qty" oninput="Pos.updatePreview()" class="bg-slate-800 border-slate-700 text-white mt-1">
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-black text-slate-500 uppercase">Sotuv Narxi (1kg)</label>
+                                <input type="number" id="pos-price" oninput="Pos.updatePreview()" class="bg-slate-800 border-slate-700 text-white mt-1">
+                            </div>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-2xl border border-slate-700">
+                            <p class="text-[9px] font-black text-slate-500 uppercase">Jami To'lov Summasi</p>
+                            <h2 id="pos-total" class="text-4xl font-black mono mt-2">0</h2>
+                            <p id="pos-profit" class="text-[10px] font-bold text-emerald-500 mt-2"></p>
+                        </div>
+                        <button onclick="Pos.submit()" class="w-full bg-blue-600 py-5 rounded-2xl font-black text-sm hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/20">SOTUVNI TASDIQLASH (KIRIM)</button>
+                    </div>
+                </div>
+                <div class="col-span-2 glass-card">
+                    <div class="p-6 border-b">
+                        <h4 class="text-xs font-black uppercase">Bugungi Savdo Jurnali</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="px-6 py-4">Vaqt</th>
+                                    <th class="px-6 py-4">Mahsulot</th>
+                                    <th class="px-6 py-4">Miqdor</th>
+                                    <th class="px-6 py-4">Summa</th>
+                                    <th class="px-6 py-4">Foyda</th>
+                                    <th class="px-6 py-4 text-right">Harakat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pos-table" class="text-sm"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="table-container">
-                    <table>
-                        <thead>
+        </div>
+
+        <div id="v-debts" class="view hidden space-y-6">
+            <div class="grid grid-cols-4 gap-8">
+                <div class="glass-card p-6 h-fit">
+                    <h4 class="text-xs font-black uppercase mb-6 border-b pb-4">Nasiya Rasmiylashtirish</h4>
+                    <div class="space-y-4">
+                        <input type="text" id="debt-client" placeholder="Mijoz F.I.Sh">
+                        <select id="debt-product"></select>
+                        <input type="number" id="debt-qty" placeholder="Miqdor (kg)">
+                        <input type="number" id="debt-amount" placeholder="Umumiy Qarz Summasi">
+                        <textarea id="debt-note" placeholder="Izoh (manzil, telefon...)" rows="3"></textarea>
+                        <button onclick="Debts.add()" class="w-full bg-amber-500 text-white py-4 rounded-xl font-black text-xs">QARZGA CHIQARISH</button>
+                    </div>
+                </div>
+                <div class="col-span-3 glass-card">
+                    <div class="p-6 border-b">
+                        <h4 class="text-xs font-black uppercase">Faol Qarzlar (Mijozlar)</h4>
+                    </div>
+                    <table class="w-full">
+                        <thead class="table-header">
                             <tr>
-                                <th>Sana</th>
-                                <th>Firma</th>
-                                <th>Mahsulot</th>
-                                <th>Jami Qarz</th>
-                                <th>To'langan</th>
-                                <th>Qoldiq</th>
-                                <th class="text-right">Amal</th>
+                                <th class="px-6 py-4">Sana</th>
+                                <th class="px-6 py-4">Mijoz</th>
+                                <th class="px-6 py-4">Mahsulot/Miqdor</th>
+                                <th class="px-6 py-4">Qarz Summasi</th>
+                                <th class="px-6 py-4">Holat</th>
+                                <th class="px-6 py-4 text-right">To'lov</th>
                             </tr>
                         </thead>
-                        <tbody id="firm-debts-body"></tbody>
+                        <tbody id="debts-table" class="text-sm"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <div id="v-suppliers" class="view hidden space-y-6">
+            <div class="glass-card">
+                <div class="p-8 border-b flex justify-between items-center bg-slate-50">
+                    <div>
+                        <h4 class="text-xs font-black uppercase">Ta'minotchilar Bilan Hisob-Kitob</h4>
+                        <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Firma va zavodlardan olingan mahsulotlar qarzi</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <input type="text" id="s-name" placeholder="Firma nomi" class="w-48 text-xs">
+                        <input type="text" id="s-item" placeholder="Mahsulot" class="w-40 text-xs">
+                        <input type="number" id="s-qty" placeholder="Miqdor" class="w-24 text-xs">
+                        <input type="number" id="s-price" placeholder="Jami summa" class="w-40 text-xs">
+                        <button onclick="Suppliers.add()" class="bg-slate-900 text-white px-6 rounded-xl font-black text-[10px]">YOZISH</button>
+                    </div>
+                </div>
+                <table class="w-full">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="px-6 py-4">Sana</th>
+                            <th class="px-6 py-4">Ta'minotchi</th>
+                            <th class="px-6 py-4">Mahsulot</th>
+                            <th class="px-6 py-4">Umumiy Qarz</th>
+                            <th class="px-6 py-4">To'langan</th>
+                            <th class="px-6 py-4">Qoldiq</th>
+                            <th class="px-6 py-4 text-right">Amal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="suppliers-table" class="text-sm"></tbody>
+                </table>
             </div>
         </div>
 
         <div id="v-hr" class="view hidden space-y-8">
-            <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200">
-                <h4 class="text-sm font-black uppercase">Ishchilar Boshqaruvi</h4>
+            <div class="glass-card p-8 bg-blue-600 text-white flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-black tracking-tight">Xodimlar Boshqaruvi</h2>
+                    <p class="text-blue-200 text-xs font-bold uppercase tracking-widest mt-1">Shtat: <span id="hr-count">0</span> kishi</p>
+                </div>
                 <div class="flex gap-4">
-                    <input type="text" id="hr-name" placeholder="Xodim Ismi" class="w-64">
-                    <input type="number" id="hr-salary" placeholder="Oylik Maoshi" class="w-48">
-                    <button onclick="Engine.addWorker()" class="btn btn-primary">XODIM QO'SHISH</button>
+                    <input type="text" id="hr-name" placeholder="Xodim ismi" class="bg-blue-700 border-none text-white placeholder:text-blue-300">
+                    <input type="number" id="hr-salary" placeholder="Oylik maosh" class="bg-blue-700 border-none text-white placeholder:text-blue-300">
+                    <button onclick="Hr.add()" class="bg-white text-blue-600 px-8 rounded-xl font-black text-xs hover:bg-slate-100">QO'SHISH</button>
                 </div>
             </div>
-            <div id="workers-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div id="hr-grid" class="grid grid-cols-4 gap-6">
                 </div>
         </div>
 
-        <div id="v-costs" class="view hidden space-y-6">
+        <div id="v-expenses" class="view hidden space-y-6">
             <div class="grid grid-cols-3 gap-8">
-                <div class="card h-fit">
-                    <h4 class="text-sm font-black uppercase mb-6">Chiqim Qo'shish</h4>
-                    <div class="space-y-4">
-                        <div><label>Sarf-Xarajat Maqsadi</label><input type="text" id="cost-note" placeholder="Masalan: Elektr energiyasi"></div>
-                        <div><label>Summa (UZS)</label><input type="number" id="cost-amount" placeholder="0.00"></div>
-                        <button onclick="Engine.addCost()" class="btn btn-danger w-full justify-center py-4">KASSADAN CHIQARISH</button>
-                    </div>
-                </div>
-                <div class="col-span-2 card">
-                    <h4 class="text-sm font-black uppercase mb-6">Bugungi Xarajatlar Jurnali</h4>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Vaqt</th>
-                                    <th>Tavsif / Sabab</th>
-                                    <th>Summa</th>
-                                    <th class="text-right">O'chirish</th>
-                                </tr>
-                            </thead>
-                            <tbody id="costs-list-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="v-calc" class="view hidden space-y-6">
-            <div class="grid grid-cols-4 gap-8">
-                <div class="card h-fit no-print">
-                    <h4 class="text-sm font-black uppercase mb-6 border-b pb-4">Hisob-Kitob</h4>
+                <div class="glass-card p-8 h-fit">
+                    <h4 class="text-xs font-black uppercase mb-6 border-b pb-4 text-red-500">Kassadan Chiqim</h4>
                     <div class="space-y-5">
-                        <select id="calc-product-list"></select>
-                        <input type="number" id="calc-qty" placeholder="Kg / Dona">
-                        <button onclick="Engine.addToCalc()" class="btn btn-primary w-full justify-center">SAVATGA QO'SHISH</button>
-                        <hr>
-                        <button onclick="Engine.clearCalc()" class="btn btn-danger w-full justify-center bg-red-500/10 text-red-600">HAMMASINI TOZALASH</button>
+                        <div>
+                            <label class="text-[9px] font-black text-slate-400 uppercase">Chiqim Maqsadi</label>
+                            <input type="text" id="exp-note" placeholder="Masalan: Elektr energiyasi">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-black text-slate-400 uppercase">Summa (UZS)</label>
+                            <input type="number" id="exp-amount" placeholder="0.00">
+                        </div>
+                        <button onclick="Expenses.add()" class="w-full bg-red-500 text-white py-5 rounded-2xl font-black text-sm hover:bg-red-600 shadow-xl shadow-red-500/10">PULNI CHIQARISH</button>
                     </div>
                 </div>
-                <div id="smeta-print-area" class="col-span-3 card p-16 shadow-none border-2 border-slate-300">
-                    <div class="flex justify-between items-start mb-16">
-                        <div>
-                            <h1 class="text-5xl font-black italic tracking-tighter text-slate-900">STEEL CENTER</h1>
-                            <p class="text-sm font-bold text-slate-500 mt-2 uppercase tracking-widest">Metal Mahsulotlari Savdo Markazi</p>
-                            <div class="mt-8 space-y-1 text-xs font-bold text-slate-600 uppercase">
-                                <p><i class="fa-solid fa-location-dot mr-2"></i> Manzil: Namangan sh., Steel ko'chasi 1-uy</p>
-                                <p><i class="fa-solid fa-phone mr-2"></i> Tel: +998 99 123 45 67</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <h2 class="text-xl font-black uppercase text-slate-800">Tijorat Taklifi</h2>
-                            <p class="text-[10px] font-bold text-slate-400 mt-1">Hujjat №: <span id="smeta-id" class="mono">---</span></p>
-                            <p class="text-[10px] font-bold text-slate-400">Sana: <span id="smeta-date" class="mono">---</span></p>
-                        </div>
+                <div class="col-span-2 glass-card">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h4 class="text-xs font-black uppercase">Bugungi Xarajatlar Tarixi</h4>
+                        <p id="exp-total-day" class="text-xs font-black text-red-500 mono"></p>
                     </div>
-
-                    <table class="mb-12">
-                        <thead class="!bg-slate-900 !text-white">
+                    <table class="w-full">
+                        <thead class="table-header">
                             <tr>
-                                <th class="!bg-slate-900 !text-white rounded-l-lg">Mahsulot Nomi</th>
-                                <th class="!bg-slate-900 !text-white text-center">Miqdori (kg)</th>
-                                <th class="!bg-slate-900 !text-white text-center">Narxi (UZS)</th>
-                                <th class="!bg-slate-900 !text-white text-right rounded-r-lg">Jami</th>
+                                <th class="px-6 py-4">Vaqt</th>
+                                <th class="px-6 py-4">Tavsif / Sabab</th>
+                                <th class="px-6 py-4">Summa</th>
+                                <th class="px-6 py-4 text-right">Bekor</th>
                             </tr>
                         </thead>
-                        <tbody id="calc-body">
-                            </tbody>
+                        <tbody id="expenses-table" class="text-sm"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
 
-                    <div class="flex justify-end border-t-4 border-slate-900 pt-8">
-                        <div class="text-right">
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">To'lov uchun jami summa:</p>
-                            <h1 id="calc-grand-total" class="text-5xl font-black mono text-slate-900 mt-2">0 UZS</h1>
-                            <p class="text-[10px] text-slate-400 font-bold mt-4 uppercase">Narxlar 10% ustama bilan hisoblangan</p>
-                        </div>
+        <div id="v-estimate" class="view hidden space-y-6">
+            <div class="grid grid-cols-4 gap-8">
+                <div class="glass-card p-6 no-print h-fit">
+                    <h4 class="text-xs font-black uppercase mb-6 border-b pb-4">Hisob-kitob</h4>
+                    <div class="space-y-4">
+                        <select id="est-product"></select>
+                        <input type="number" id="est-qty" placeholder="Miqdor (kg)">
+                        <button onclick="Estimate.add()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-black text-xs">QO'SHISH</button>
+                        <hr class="my-4">
+                        <button onclick="Estimate.clear()" class="w-full border-2 border-slate-100 text-slate-400 py-3 rounded-xl font-black text-[10px] hover:bg-slate-50">SABATNI TOZALASH</button>
                     </div>
-
-                    <div class="mt-32 flex justify-between items-end border-t border-slate-100 pt-10">
-                        <div class="text-[10px] font-bold text-slate-300 uppercase">
-                            <p>Smeta faqat ma'lumot uchun</p>
-                            <p>To'lov vaqtida narxlar o'zgarishi mumkin</p>
+                </div>
+                <div id="smeta-print" class="col-span-3 glass-card p-16 relative bg-white min-h-[1000px]">
+                    <div class="flex justify-between items-start border-b-8 border-slate-900 pb-12 mb-12">
+                        <div>
+                            <h1 class="text-6xl font-black italic tracking-tighter text-slate-900">STEEL CENTER</h1>
+                            <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-[0.3em]">Metall Mahsulotlari Ombori</p>
+                            <div class="mt-8 space-y-1 text-[10px] font-black text-slate-500 uppercase">
+                                <p><i class="fa-solid fa-location-dot mr-2 text-blue-500"></i> Manzil: Namangan viloyati, Sanoat zonasi</p>
+                                <p><i class="fa-solid fa-phone mr-2 text-blue-500"></i> Aloqa: +998 (99) 000-00-00</p>
+                            </div>
                         </div>
-                        <div class="flex gap-20">
-                            <div class="text-center">
-                                <div class="w-32 border-b-2 border-slate-900 mb-2"></div>
-                                <p class="text-[9px] font-bold uppercase">Menejer Imzosi</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="w-32 h-32 border-4 border-slate-200 rounded-full flex items-center justify-center">
-                                    <p class="text-[10px] font-black text-slate-200 uppercase rotate-12">M.O' / STAMP</p>
-                                </div>
-                            </div>
+                        <div class="text-right">
+                            <h2 class="text-3xl font-black uppercase text-slate-800 tracking-tighter">Smeta / Taklif</h2>
+                            <p class="text-[10px] font-bold text-slate-400 mt-2">Hujjat №: <span id="smeta-num" class="mono text-slate-900"></span></p>
+                            <p class="text-[10px] font-bold text-slate-400">Sana: <span id="smeta-date" class="mono text-slate-900"></span></p>
                         </div>
                     </div>
                     
-                    <button onclick="window.print()" class="no-print btn btn-accent mt-12 w-full justify-center py-5">
-                        <i class="fa-solid fa-print"></i> PDF SAQLASH YOKI CHOP ETISH
+                    <table class="w-full mb-12">
+                        <thead>
+                            <tr class="bg-slate-900 text-white text-[10px] uppercase font-black">
+                                <th class="px-6 py-4 text-left">Nomi</th>
+                                <th class="px-6 py-4 text-center">Miqdori</th>
+                                <th class="px-6 py-4 text-right">Narxi</th>
+                                <th class="px-6 py-4 text-right">Jami</th>
+                            </tr>
+                        </thead>
+                        <tbody id="est-body" class="text-sm font-medium border-b-2 border-slate-100"></tbody>
+                    </table>
+
+                    <div class="flex justify-end pt-10">
+                        <div class="text-right w-1/2">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-[10px] font-black text-slate-400 uppercase">To'lov uchun jami:</span>
+                                <span id="est-total" class="text-4xl font-black mono text-slate-900">0</span>
+                            </div>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase mt-4">Diqqat: Ushbu narxlar faqat 24 soat davomida amal qiladi.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-40 flex justify-between items-end border-t pt-10">
+                        <div class="w-48 text-center">
+                            <div class="border-b-2 border-slate-900 mb-2"></div>
+                            <p class="text-[9px] font-black uppercase text-slate-400">Direktor imzosi</p>
+                        </div>
+                        <div class="w-40 h-40 border-8 border-slate-100 rounded-full flex items-center justify-center rotate-12">
+                            <p class="text-[10px] font-black text-slate-200 uppercase">M.O' / STAMP</p>
+                        </div>
+                    </div>
+
+                    <button onclick="window.print()" class="no-print w-full mt-20 bg-blue-600 text-white py-5 rounded-2xl font-black text-sm flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-print"></i> CHOP ETISH YOKI PDF SAQLASH
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="v-archive" class="view hidden space-y-6">
-            <div class="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200">
+        <div id="v-history" class="view hidden space-y-6">
+            <div class="glass-card p-8 flex justify-between items-center bg-white">
                 <div>
-                    <h4 class="text-sm font-black uppercase">Ish Kunlari Arxivi</h4>
-                    <p class="text-xs text-slate-400 mt-1">Barcha yopilgan ish kunlari va hisobotlar</p>
+                    <h4 class="text-xs font-black uppercase">Tizim Arxivlari</h4>
+                    <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Barcha yopilgan ish kunlari va master-bazani eksport qilish</p>
                 </div>
-                <button onclick="Engine.exportAllArchiveToExcel()" class="btn btn-success px-10">
-                    <i class="fa-solid fa-file-excel"></i> BARCHA MA'LUMOTLARNI EXCELGA JAMLAB YUKLASH
+                <button onclick="History.exportAll()" class="bg-emerald-500 text-white px-10 py-4 rounded-xl font-black text-[10px] hover:bg-emerald-600 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-file-excel text-lg"></i> BARCHA MA'LUMOTLARNI EXCELGA JAMLASH
                 </button>
             </div>
-            <div id="archive-grid" class="grid grid-cols-1 gap-4">
+            <div id="history-list" class="grid grid-cols-1 gap-4">
                 </div>
         </div>
 
         <div id="v-settings" class="view hidden">
-            <div class="max-w-2xl card mx-auto">
-                <h4 class="text-sm font-black uppercase mb-8 border-b pb-4">Tizim Sozlamalari</h4>
+            <div class="max-w-2xl mx-auto glass-card p-10">
+                <h4 class="text-sm font-black uppercase mb-10 border-b pb-4">Tizim Sozlamalari</h4>
                 <div class="space-y-10">
                     <div class="grid grid-cols-2 gap-8">
                         <div>
-                            <label>Xavfsizlik PIN-Kodi</label>
-                            <div class="flex gap-2">
-                                <input type="password" id="new-pin" maxlength="4" placeholder="Yangi PIN">
-                                <button onclick="Engine.updatePin()" class="btn btn-primary px-4">Saqlash</button>
+                            <label class="text-[10px] font-black text-slate-400 uppercase">Kirish PIN-kodi</label>
+                            <div class="flex gap-2 mt-2">
+                                <input type="password" id="set-pin" maxlength="4" placeholder="Yangi PIN">
+                                <button onclick="Settings.updatePin()" class="bg-slate-900 text-white px-4 rounded-xl font-black text-[10px]">SAQLASH</button>
                             </div>
                         </div>
                         <div>
-                            <label>Valyuta Belgisi</label>
-                            <input type="text" value="UZS" readonly class="bg-slate-50">
+                            <label class="text-[10px] font-black text-slate-400 uppercase">Ma'lumotlar Zaxirasi</label>
+                            <button onclick="Settings.downloadBackup()" class="w-full mt-2 border-2 border-blue-100 text-blue-600 py-2.5 rounded-xl font-black text-[10px] hover:bg-blue-50">JSON BACKUP YUKLASH</button>
                         </div>
                     </div>
                     <hr>
-                    <div class="bg-red-50 p-6 rounded-xl border border-red-100">
-                        <h5 class="text-red-600 font-black uppercase text-xs mb-2">Havfli Hudud</h5>
-                        <p class="text-xs text-red-500 mb-4">Ushbu tugmani bossangiz, barcha ma'lumotlar (ombor, savdo, arxiv) butunlay o'chib ketadi!</p>
-                        <button onclick="Engine.resetData()" class="btn btn-danger py-2 text-[10px]">TIZIMNI TOZALASH (RESET)</button>
+                    <div class="p-6 bg-red-50 border border-red-100 rounded-2xl">
+                        <h5 class="text-red-600 font-black text-xs uppercase mb-2">Havfli Hudud</h5>
+                        <p class="text-[10px] text-red-400 font-bold mb-4 uppercase leading-relaxed">Ushbu amal barcha savdolar, ombor va xodimlarni butunlay o'chirib yuboradi! Tiklab bo'lmaydi.</p>
+                        <button onclick="Settings.factoryReset()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-black text-[10px] hover:bg-red-600">HAMMASINI TOZALASH (HARD RESET)</button>
                     </div>
                 </div>
             </div>
         </div>
-
     </main>
 
     <script>
-        // --- DATA ENGINE ---
+        // --- DATABASE & CORE ENGINE ---
         let DB = {
             pin: "1234",
             kassa: 0,
             warehouse: [],
             sales: [],
-            nasiya: [],
-            firmDebts: [],
+            debts: [],
+            suppliers: [],
             workers: [],
-            costs: [],
+            expenses: [],
             archive: []
         };
 
-        const Engine = {
-            save: function() {
-                localStorage.setItem('steel_master_enterprise_v6', JSON.stringify(DB));
-                this.refreshUI();
+        const Core = {
+            save: () => {
+                localStorage.setItem('steel_master_v8', JSON.stringify(DB));
+                Core.refresh();
             },
-
-            load: function() {
-                const stored = localStorage.getItem('steel_master_enterprise_v6');
-                if(stored) DB = JSON.parse(stored);
-                this.refreshUI();
+            load: () => {
+                const data = localStorage.getItem('steel_master_v8');
+                if(data) DB = JSON.parse(data);
+                Core.refresh();
             },
-
-            authenticate: function() {
-                const pin = document.getElementById('sys-pin').value;
-                if(pin === DB.pin) {
-                    document.getElementById('login-screen').style.display = 'none';
+            login: () => {
+                if(document.getElementById('pin-input').value === DB.pin) {
+                    document.getElementById('auth-layer').classList.add('hidden');
                     UI.initChart();
-                } else {
-                    const err = document.getElementById('login-error');
-                    err.classList.remove('hidden');
-                    setTimeout(() => err.classList.add('hidden'), 2000);
-                }
+                } else alert("XATO PIN-KOD!");
             },
-
-            format: n => new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0)) + ' UZS',
-
-            // WAREHOUSE
-            warehouseAdd: function() {
-                const n = document.getElementById('w-in-name').value;
-                const q = parseFloat(document.getElementById('w-in-qty').value);
-                const c = parseFloat(document.getElementById('w-in-cost').value);
-
-                if(!n || isNaN(q) || isNaN(c)) return alert("Ma'lumotlar to'liq emas!");
-
-                let item = DB.warehouse.find(x => x.name.toLowerCase() === n.toLowerCase());
-                if(item) {
-                    item.cost = ((item.qty * item.cost) + (q * c)) / (item.qty + q);
-                    item.qty += q;
-                } else {
-                    DB.warehouse.push({ name: n, qty: q, cost: c });
-                }
-
-                ['w-in-name', 'w-in-qty', 'w-in-cost'].forEach(id => document.getElementById(id).value = "");
-                this.save();
-            },
-
-            // SALES
-            calcSaleTotal: function() {
-                const idx = document.getElementById('sale-product-list').value;
-                const qty = parseFloat(document.getElementById('sale-qty').value) || 0;
-                const price = parseFloat(document.getElementById('sale-price').value) || 0;
-
-                const total = qty * price;
-                document.getElementById('sale-total-display').innerText = this.format(total);
-
-                if(idx !== "") {
-                    const item = DB.warehouse[idx];
-                    const profit = (price - item.cost) * qty;
-                    document.getElementById('sale-profit-hint').innerText = "Kutilayotgan foyda: " + this.format(profit);
-                }
-            },
-
-            processSale: function() {
-                const idx = document.getElementById('sale-product-list').value;
-                const qty = parseFloat(document.getElementById('sale-qty').value);
-                const price = parseFloat(document.getElementById('sale-price').value);
-
-                if(idx === "" || isNaN(qty) || isNaN(price)) return alert("Sotuv ma'lumotlarini tekshiring!");
-
-                const item = DB.warehouse[idx];
-                if(item.qty < qty) return alert("Omborda yetarli mahsulot yo'q!");
-
-                const total = qty * price;
-                const profit = (price - item.cost) * qty;
-
-                DB.sales.unshift({
-                    name: item.name,
-                    qty, price, total, profit,
-                    time: new Date().toLocaleTimeString()
-                });
-
-                DB.kassa += total;
-                item.qty -= qty;
-
-                ['sale-qty', 'sale-price'].forEach(id => document.getElementById(id).value = "");
-                this.save();
-            },
-
-            deleteSale: function(idx) {
-                if(!confirm("Ushbu sotuv bekor qilinsinmi? Pul kassadan chiqariladi va mahsulot omborga qaytadi.")) return;
-                const s = DB.sales[idx];
-                let item = DB.warehouse.find(x => x.name === s.name);
-                if(item) item.qty += s.qty;
-                DB.kassa -= s.total;
-                DB.sales.splice(idx, 1);
-                this.save();
-            },
-
-            // NASIYA
-            addNasiya: function() {
-                const client = document.getElementById('n-client-name').value;
-                const idx = document.getElementById('n-product-list').value;
-                const qty = parseFloat(document.getElementById('n-qty').value);
-                const amount = parseFloat(document.getElementById('n-amount').value);
-                const note = document.getElementById('n-note').value;
-
-                if(!client || idx==="" || isNaN(amount)) return alert("Nasiya ma'lumotlari chala!");
-                const itm = DB.warehouse[idx];
-                
-                DB.nasiya.unshift({
-                    client, product: itm.name, qty, amount, note,
-                    date: new Date().toLocaleDateString(),
-                    paid: false
-                });
-
-                itm.qty -= qty;
-                this.save();
-            },
-
-            // FIRMS
-            addFirmDebt: function() {
-                const f = document.getElementById('debt-firm').value;
-                const i = document.getElementById('debt-item').value;
-                const q = parseFloat(document.getElementById('debt-qty').value);
-                const p = parseFloat(document.getElementById('debt-price').value);
-                if(!f || isNaN(q*p)) return;
-                
-                DB.firmDebts.unshift({
-                    firm: f, item: i, qty: q, total: q*p, paid: 0, 
-                    date: new Date().toLocaleDateString()
-                });
-                
-                let w = DB.warehouse.find(x => x.name.toLowerCase() === i.toLowerCase());
-                if(w) { w.qty += q; w.cost = p; } else { DB.warehouse.push({name:i, qty:q, cost:p}); }
-                this.save();
-            },
-
-            // WORKERS
-            addWorker: function() {
-                const name = document.getElementById('hr-name').value;
-                const sal = parseFloat(document.getElementById('hr-salary').value);
-                if(name && !isNaN(sal)) {
-                    DB.workers.push({ name, salary: sal, paid: 0 });
-                    this.save();
-                }
-            },
-
-            paySalary: function(idx) {
-                const w = DB.workers[idx];
-                const amount = parseFloat(prompt(`${w.name} uchun to'lov summasi:`, w.salary - w.paid));
-                if(amount > 0 && amount <= DB.kassa) {
-                    w.paid += amount;
-                    DB.kassa -= amount;
-                    DB.costs.unshift({ date: new Date().toLocaleTimeString(), note: `Maosh: ${w.name}`, amount: amount });
-                    this.save();
-                } else if(amount > DB.kassa) {
-                    alert("Kassada yetarli mablag' yo'q!");
-                }
-            },
-
-            // COSTS
-            addCost: function() {
-                const note = document.getElementById('cost-note').value;
-                const amount = parseFloat(document.getElementById('cost-amount').value);
-                if(amount > 0 && amount <= DB.kassa) {
-                    DB.costs.unshift({ date: new Date().toLocaleTimeString(), note, amount });
-                    DB.kassa -= amount;
-                    this.save();
-                } else {
-                    alert("Kassada mablag' yetarli emas!");
-                }
-            },
-
-            // SMETA / CALC
-            calcItems: [],
-            addToCalc: function() {
-                const idx = document.getElementById('calc-product-list').value;
-                const qty = parseFloat(document.getElementById('calc-qty').value);
-                if(idx==="" || isNaN(qty)) return;
-                const p = DB.warehouse[idx];
-                const finalP = p.cost * 1.1; // 10% Profit margin for smeta
-                this.calcItems.push({ name: p.name, qty, price: finalP, total: finalP * qty });
-                this.renderCalc();
-            },
-            renderCalc: function() {
-                let gt = 0;
-                document.getElementById('calc-body').innerHTML = this.calcItems.map(i => {
-                    gt += i.total;
-                    return `<tr>
-                        <td class="font-bold">${i.name}</td>
-                        <td class="text-center mono">${i.qty}</td>
-                        <td class="text-center mono">${this.format(i.price)}</td>
-                        <td class="text-right font-black">${this.format(i.total)}</td>
-                    </tr>`;
-                }).join('');
-                document.getElementById('calc-grand-total').innerText = this.format(gt);
-                document.getElementById('smeta-date').innerText = new Date().toLocaleDateString();
-                document.getElementById('smeta-id').innerText = Math.floor(100000 + Math.random() * 900000);
-            },
-            clearCalc: function() { this.calcItems = []; this.renderCalc(); },
-
-            // ARCHIVE & CLOSE DAY
-            closeWorkDay: function() {
-                if(!confirm("Diqqat! Ish kunini yopmoqchimisiz? Barcha bugungi savdolar arxivlanadi.")) return;
-                
-                const dayProfit = DB.sales.reduce((a,b) => a + b.profit, 0);
-                const dayRevenue = DB.sales.reduce((a,b) => a + b.total, 0);
-
-                const dayData = {
+            format: (n) => new Intl.NumberFormat('uz-UZ').format(Math.round(n || 0)) + ' UZS',
+            
+            endDay: () => {
+                if(!confirm("Diqqat! Ish kunini yopmoqchimisiz? Barcha bugungi savdolar arxivga o'tkaziladi.")) return;
+                const daily = {
                     date: new Date().toLocaleDateString(),
                     kassa: DB.kassa,
-                    revenue: dayRevenue,
-                    profit: dayProfit,
-                    details: {
-                        savdolar: [...DB.sales],
-                        nasiyalar: [...DB.nasiya],
-                        chiqimlar: [...DB.costs],
-                        firmalar: [...DB.firmDebts],
-                        xodimlar: [...DB.workers]
-                    }
+                    sales_total: DB.sales.reduce((a,b) => a + b.total, 0),
+                    profit_total: DB.sales.reduce((a,b) => a + b.profit, 0),
+                    data: { sales: [...DB.sales], exp: [...DB.expenses] }
                 };
-
-                DB.archive.unshift(dayData);
-                DB.sales = [];
-                DB.costs = [];
-                this.save();
+                DB.archive.unshift(daily);
+                DB.sales = []; DB.expenses = [];
+                Core.save();
             },
-
-            // EXCEL EXPORT
-            exportToExcel: function(idx) {
-                const day = DB.archive[idx];
-                const wb = XLSX.utils.book_new();
+            refresh: () => {
+                document.getElementById('kassa-val').innerText = Core.format(DB.kassa);
+                document.getElementById('stat-sales').innerText = Core.format(DB.sales.reduce((a,b) => a + b.total, 0));
+                document.getElementById('stat-profit').innerText = Core.format(DB.sales.reduce((a,b) => a + b.profit, 0));
+                document.getElementById('stat-debts').innerText = Core.format(DB.debts.reduce((a,b) => a + (b.paid?0:b.amount), 0));
+                document.getElementById('stat-stock').innerText = Core.format(DB.warehouse.reduce((a,b) => a + (b.qty*b.cost), 0));
                 
-                const sheets = [
-                    { data: day.details.savdolar, name: "Sotuvlar" },
-                    { data: day.details.nasiyalar, name: "Nasiyalar" },
-                    { data: day.details.chiqimlar, name: "Xarajatlar" },
-                    { data: day.details.xodimlar, name: "Xodimlar" }
-                ];
+                Warehouse.render();
+                Pos.render();
+                Debts.render();
+                Suppliers.render();
+                Hr.render();
+                Expenses.render();
+                History.render();
+                UI.updateSelects();
+                UI.renderAlerts();
+            }
+        };
 
-                sheets.forEach(s => {
-                    if(s.data.length > 0) {
-                        const ws = XLSX.utils.json_to_sheet(s.data);
-                        XLSX.utils.book_append_sheet(wb, ws, s.name);
-                    }
-                });
-
-                XLSX.writeFile(wb, `SteelCenter_Hisobot_${day.date}.xlsx`);
-            },
-
-            exportAllArchiveToExcel: function() {
-                if(DB.archive.length === 0) return alert("Arxivda ma'lumot yo'q!");
-                const wb = XLSX.utils.book_new();
+        // --- MODULES ---
+        const Warehouse = {
+            add: () => {
+                const n = document.getElementById('w-name').value, 
+                      q = parseFloat(document.getElementById('w-qty').value),
+                      c = parseFloat(document.getElementById('w-cost').value);
+                if(!n || isNaN(q*c)) return alert("To'liq kiriting!");
                 
-                let masterSales = [], masterNasiya = [], masterCosts = [], masterHr = [];
-
-                DB.archive.forEach(day => {
-                    day.details.savdolar.forEach(x => masterSales.push({ Sana: day.date, ...x }));
-                    day.details.nasiyalar.forEach(x => masterNasiya.push({ Sana: day.date, ...x }));
-                    day.details.chiqimlar.forEach(x => masterCosts.push({ Sana: day.date, ...x }));
-                    day.details.xodimlar.forEach(x => masterHr.push({ Sana: day.date, ...x }));
-                });
-
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(masterSales), "Barcha Sotuvlar");
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(masterNasiya), "Barcha Nasiyalar");
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(masterCosts), "Barcha Chiqimlar");
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(masterHr), "Barcha Oyliklar");
-
-                XLSX.writeFile(wb, `SteelCenter_MASTER_DATABASE.xlsx`);
+                let itm = DB.warehouse.find(x => x.name.toLowerCase() === n.toLowerCase());
+                if(itm) {
+                    itm.cost = ((itm.qty*itm.cost) + (q*c)) / (itm.qty + q);
+                    itm.qty += q;
+                } else DB.warehouse.push({name: n, qty: q, cost: c});
+                
+                ['w-name','w-qty','w-cost'].forEach(id => document.getElementById(id).value = "");
+                Core.save();
             },
-
-            // REFRESH UI
-            refreshUI: function() {
-                // Header & Stats
-                document.getElementById('header-kassa').innerText = this.format(DB.kassa);
-                document.getElementById('header-date').innerText = new Date().toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-                const todayRev = DB.sales.reduce((a,b) => a + b.total, 0);
-                const todayProf = DB.sales.reduce((a,b) => a + b.profit, 0);
-                const warehouseVal = DB.warehouse.reduce((a,b) => a + (b.qty * b.cost), 0);
-                const totalNas = DB.nasiya.reduce((a,b) => a + (b.paid ? 0 : b.amount), 0);
-
-                document.getElementById('stat-revenue').innerText = this.format(todayRev);
-                document.getElementById('stat-profit').innerText = this.format(todayProf);
-                document.getElementById('stat-warehouse').innerText = this.format(warehouseVal);
-                document.getElementById('stat-nasiya').innerText = this.format(totalNas);
-
-                // Render Sections
-                this.renderWarehouse();
-                this.renderSales();
-                this.renderNasiya();
-                this.renderFirms();
-                this.renderWorkers();
-                this.renderCosts();
-                this.renderAlerts();
-                this.renderArchive();
-                this.updateSelects();
-            },
-
-            renderWarehouse: function() {
-                document.getElementById('full-warehouse-body').innerHTML = DB.warehouse.map((itm, i) => `
-                    <tr class="${itm.qty < 1000 ? 'low-stock' : ''}">
-                        <td class="font-black text-slate-800">${itm.name}</td>
-                        <td><span class="stock-badge ${itm.qty < 1000 ? 'badge-red' : 'badge-green'} mono">${itm.qty.toFixed(2)} kg</span></td>
-                        <td class="mono">${this.format(itm.cost)}</td>
-                        <td class="font-bold text-slate-900 mono">${this.format(itm.qty * itm.cost)}</td>
-                        <td class="text-right">
-                            <button onclick="DB.warehouse.splice(${i},1); Engine.save()" class="text-slate-300 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+            render: () => {
+                document.getElementById('warehouse-table').innerHTML = DB.warehouse.map((x, i) => `
+                    <tr class="${x.qty < 1000 ? 'low-stock' : ''}">
+                        <td class="px-6 py-4 font-black text-slate-900">${x.name}</td>
+                        <td class="px-6 py-4 mono font-bold"><span class="badge ${x.qty < 1000 ? 'badge-danger' : 'badge-success'}">${x.qty.toFixed(2)} kg</span></td>
+                        <td class="px-6 py-4 mono">${Core.format(x.cost)}</td>
+                        <td class="px-6 py-4 mono font-black">${Core.format(x.qty * x.cost)}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="DB.warehouse.splice(${i},1);Core.save()" class="text-slate-300 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
-                    </tr>
-                `).join('');
-            },
+                    </tr>`).join('');
+            }
+        };
 
-            renderSales: function() {
-                document.getElementById('today-sales-body').innerHTML = DB.sales.map((s, i) => `
-                    <tr>
-                        <td class="text-xs font-bold text-slate-400 mono">${s.time}</td>
-                        <td class="font-bold">${s.name}</td>
-                        <td class="mono">${s.qty}</td>
-                        <td class="font-black text-slate-800 mono">${this.format(s.total)}</td>
-                        <td class="text-green-600 font-bold mono">+${this.format(s.profit)}</td>
-                        <td class="text-right"><button onclick="Engine.deleteSale(${i})" class="text-slate-300 hover:text-red-500">BEKOR</button></td>
-                    </tr>
-                `).join('');
-            },
-
-            renderNasiya: function() {
-                document.getElementById('nasiya-list-body').innerHTML = DB.nasiya.map((n, i) => `
-                    <tr>
-                        <td class="text-xs font-bold">${n.date}</td>
-                        <td class="font-black">${n.client}</td>
-                        <td class="text-xs uppercase font-bold text-slate-400">${n.product} (${n.qty} kg)</td>
-                        <td class="font-black text-red-600 mono">${this.format(n.amount)}</td>
-                        <td><span class="text-[9px] font-black px-2 py-1 rounded ${n.paid?'bg-green-100 text-green-600':'bg-red-100 text-red-600'} uppercase">${n.paid?'To\'langan':'Qarzdor'}</span></td>
-                        <td class="text-right">${!n.paid?`<button onclick="DB.kassa+=${n.amount};DB.nasiya[${i}].paid=true;Engine.save()" class="btn btn-primary py-1 px-3 text-[9px]">Yopish</button>`:'✅'}</td>
-                    </tr>
-                `).join('');
-            },
-
-            renderFirms: function() {
-                document.getElementById('firm-debts-body').innerHTML = DB.firmDebts.map((d, i) => `
-                    <tr>
-                        <td class="text-xs">${d.date}</td>
-                        <td class="font-bold">${d.firm}</td>
-                        <td class="text-[10px] font-bold uppercase">${d.item}</td>
-                        <td class="mono font-bold">${this.format(d.total)}</td>
-                        <td class="mono text-green-600">${this.format(d.paid)}</td>
-                        <td class="mono text-red-600 font-black">${this.format(d.total - d.paid)}</td>
-                        <td class="text-right"><button onclick="let s=parseFloat(prompt('Summa:')); if(s<=DB.kassa){d.paid+=s;DB.kassa-=s;Engine.save()}" class="text-[10px] font-black hover:underline">TO'LASH</button></td>
-                    </tr>
-                `).join('');
-            },
-
-            renderWorkers: function() {
-                document.getElementById('workers-cards-grid').innerHTML = DB.workers.map((w, i) => `
-                    <div class="card bg-slate-50 border-slate-200">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-500"><i class="fa-solid fa-user"></i></div>
-                            <div><h4 class="font-black text-slate-800 leading-tight">${w.name}</h4><p class="text-[9px] font-bold text-slate-400 uppercase">Xodim</p></div>
-                        </div>
-                        <div class="space-y-2 mb-6">
-                            <div class="flex justify-between text-xs"><span>Oylik:</span><span class="font-bold mono">${this.format(w.salary)}</span></div>
-                            <div class="flex justify-between text-xs"><span>Berildi:</span><span class="font-bold text-green-600 mono">${this.format(w.paid)}</span></div>
-                        </div>
-                        <button onclick="Engine.paySalary(${i})" class="w-full btn btn-primary py-2 text-[10px] justify-center">MAOSH TO'LASH</button>
-                    </div>
-                `).join('');
-            },
-
-            renderCosts: function() {
-                document.getElementById('costs-list-body').innerHTML = DB.costs.map((c, i) => `
-                    <tr>
-                        <td class="text-xs mono font-bold text-slate-400">${c.date}</td>
-                        <td class="font-bold text-slate-700">${c.note}</td>
-                        <td class="font-black text-red-600 mono">-${this.format(c.amount)}</td>
-                        <td class="text-right"><button onclick="DB.costs.splice(${i},1); Engine.save()" class="text-slate-200 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button></td>
-                    </tr>
-                `).join('');
-            },
-
-            renderAlerts: function() {
-                const el = document.getElementById('dashboard-alerts');
-                el.innerHTML = "";
-                let count = 0;
-                DB.warehouse.forEach(item => {
-                    if(item.qty < 1000) {
-                        count++;
-                        el.innerHTML += `<div class="p-4 bg-white rounded-xl border-l-4 border-red-500 shadow-sm flex justify-between items-center">
-                            <div><p class="text-[10px] font-black text-slate-400 uppercase">${item.name}</p><p class="text-red-600 font-black text-sm">${item.qty.toFixed(1)} kg qoldi</p></div>
-                            <i class="fa-solid fa-arrow-trend-down text-red-200 text-xl"></i>
-                        </div>`;
-                    }
-                });
-                if(count === 0) el.innerHTML = `<div class="text-center py-10 text-slate-300"><i class="fa-solid fa-check-circle text-4xl mb-2"></i><p class="text-xs font-bold uppercase">Hamma narsa joyida</p></div>`;
-            },
-
-            renderArchive: function() {
-                document.getElementById('archive-grid').innerHTML = DB.archive.map((a, i) => `
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 flex justify-between items-center hover:shadow-md transition-shadow">
-                        <div class="flex items-center gap-6">
-                            <div class="text-center bg-slate-100 px-4 py-2 rounded-lg"><p class="text-[10px] font-bold text-slate-400 uppercase">Sana</p><p class="font-black text-slate-800">${a.date}</p></div>
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Kassa Holati</p><p class="font-black text-slate-700 mono">${this.format(a.kassa)}</p></div>
-                            <div><p class="text-[10px] font-bold text-slate-400 uppercase">Kunlik Foyda</p><p class="font-black text-green-600 mono">${this.format(a.profit)}</p></div>
-                        </div>
-                        <button onclick="Engine.exportToExcel(${i})" class="btn btn-primary px-6 text-[10px]">HISOBOT (EXCEL)</button>
-                    </div>
-                `).join('');
-            },
-
-            updateSelects: function() {
-                const selects = ['sale-product-list', 'n-product-list', 'calc-product-list'];
-                selects.forEach(id => {
-                    const el = document.getElementById(id);
-                    const current = el.value;
-                    el.innerHTML = '<option value="">Mahsulotni tanlang...</option>' + 
-                        DB.warehouse.map((item, i) => `<option value="${i}">${item.name} (${item.qty.toFixed(1)} kg)</option>`).join('');
-                    el.value = current;
-                });
-            },
-
-            updatePin: function() {
-                const pin = document.getElementById('new-pin').value;
-                if(pin.length === 4) { DB.pin = pin; this.save(); alert("PIN-kod o'zgartirildi!"); }
-            },
-
-            resetData: function() {
-                if(confirm("DIQQAT! Barcha ma'lumotlar o'chib ketadi. Ishonchingiz komilmi?")) {
-                    localStorage.removeItem('steel_master_enterprise_v6');
-                    location.reload();
+        const Pos = {
+            updatePreview: () => {
+                const idx = document.getElementById('pos-product').value;
+                const q = parseFloat(document.getElementById('pos-qty').value) || 0;
+                const p = parseFloat(document.getElementById('pos-price').value) || 0;
+                document.getElementById('pos-total').innerText = Core.format(q*p);
+                if(idx !== "") {
+                    const prof = (p - DB.warehouse[idx].cost) * q;
+                    document.getElementById('pos-profit').innerText = "FOYDA: " + Core.format(prof);
                 }
+            },
+            submit: () => {
+                const idx = document.getElementById('pos-product').value;
+                const q = parseFloat(document.getElementById('pos-qty').value);
+                const p = parseFloat(document.getElementById('pos-price').value);
+                if(idx==="" || isNaN(q*p)) return;
+
+                const itm = DB.warehouse[idx];
+                if(itm.qty < q) return alert("OMBORDA YETARLI EMAS!");
+
+                const total = q*p;
+                const profit = (p - itm.cost) * q;
+                
+                DB.sales.unshift({name: itm.name, qty: q, total, profit, time: new Date().toLocaleTimeString()});
+                itm.qty -= q;
+                DB.kassa += total;
+                ['pos-qty','pos-price'].forEach(id => document.getElementById(id).value = "");
+                Core.save();
+            },
+            render: () => {
+                document.getElementById('pos-table').innerHTML = DB.sales.map((x, i) => `
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-bold text-slate-400 mono">${x.time}</td>
+                        <td class="px-6 py-4 font-black">${x.name}</td>
+                        <td class="px-6 py-4 mono">${x.qty} kg</td>
+                        <td class="px-6 py-4 mono font-black">${Core.format(x.total)}</td>
+                        <td class="px-6 py-4 mono text-emerald-600 font-bold">+${Core.format(x.profit)}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="DB.kassa-=${x.total}; DB.sales.splice(${i},1); Core.save()" class="text-[10px] font-black text-slate-300 hover:text-red-500 uppercase">Bekor</button>
+                        </td>
+                    </tr>`).join('');
+            }
+        };
+
+        const Debts = {
+            add: () => {
+                const c = document.getElementById('debt-client').value,
+                      idx = document.getElementById('debt-product').value,
+                      q = parseFloat(document.getElementById('debt-qty').value),
+                      a = parseFloat(document.getElementById('debt-amount').value),
+                      n = document.getElementById('debt-note').value;
+                if(!c || idx === "" || isNaN(a)) return;
+
+                DB.debts.unshift({client: c, item: DB.warehouse[idx].name, qty: q, amount: a, note: n, date: new Date().toLocaleDateString(), paid: false});
+                DB.warehouse[idx].qty -= q;
+                Core.save();
+            },
+            render: () => {
+                document.getElementById('debts-table').innerHTML = DB.debts.map((x, i) => `
+                    <tr class="${x.paid?'opacity-50':''}">
+                        <td class="px-6 py-4 text-xs font-bold">${x.date}</td>
+                        <td class="px-6 py-4 font-black">${x.client}</td>
+                        <td class="px-6 py-4 text-xs font-medium">${x.item} (${x.qty} kg)</td>
+                        <td class="px-6 py-4 mono font-black text-amber-600">${Core.format(x.amount)}</td>
+                        <td class="px-6 py-4"><span class="badge ${x.paid?'badge-success':'badge-danger'}">${x.paid?'YOPILDI':'QARZ'}</span></td>
+                        <td class="px-6 py-4 text-right">
+                            ${!x.paid ? `<button onclick="DB.kassa+=${x.amount}; DB.debts[${i}].paid=true; Core.save()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-black text-[10px]">QABUL</button>` : '✅'}
+                        </td>
+                    </tr>`).join('');
+            }
+        };
+
+        const Suppliers = {
+            add: () => {
+                const n = document.getElementById('s-name').value,
+                      i = document.getElementById('s-item').value,
+                      q = parseFloat(document.getElementById('s-qty').value),
+                      p = parseFloat(document.getElementById('s-price').value);
+                if(!n || isNaN(q*p)) return;
+                DB.suppliers.unshift({name: n, item: i, qty: q, total: p, paid: 0, date: new Date().toLocaleDateString()});
+                Core.save();
+            },
+            render: () => {
+                document.getElementById('suppliers-table').innerHTML = DB.suppliers.map((x, i) => `
+                    <tr>
+                        <td class="px-6 py-4 text-xs">${x.date}</td>
+                        <td class="px-6 py-4 font-black">${x.name}</td>
+                        <td class="px-6 py-4 text-xs uppercase">${x.item}</td>
+                        <td class="px-6 py-4 mono">${Core.format(x.total)}</td>
+                        <td class="px-6 py-4 mono text-emerald-600">${Core.format(x.paid)}</td>
+                        <td class="px-6 py-4 mono text-red-600 font-black">${Core.format(x.total - x.paid)}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="let s=parseFloat(prompt('To\'lov:')); if(s<=DB.kassa){x.paid+=s; DB.kassa-=s; Core.save()}" class="text-[10px] font-black underline">TO'LASH</button>
+                        </td>
+                    </tr>`).join('');
+            }
+        };
+
+        const Hr = {
+            add: () => {
+                const n = document.getElementById('hr-name').value,
+                      s = parseFloat(document.getElementById('hr-salary').value);
+                if(n && s > 0) { DB.workers.push({name: n, salary: s, paid: 0}); Core.save(); }
+            },
+            render: () => {
+                document.getElementById('hr-count').innerText = DB.workers.length;
+                document.getElementById('hr-grid').innerHTML = DB.workers.map((x, i) => `
+                    <div class="glass-card p-6 bg-white">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 text-xl"><i class="fa-solid fa-user-tie"></i></div>
+                            <div><h4 class="font-black text-slate-900 leading-tight">${x.name}</h4><p class="text-[9px] font-bold text-slate-400 uppercase">Doimiy Xodim</p></div>
+                        </div>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-[10px] font-bold"><span>MAOSH:</span><span class="mono">${Core.format(x.salary)}</span></div>
+                            <div class="flex justify-between text-[10px] font-bold text-emerald-600"><span>BERILDI:</span><span class="mono">${Core.format(x.paid)}</span></div>
+                            <div class="flex justify-between text-[10px] font-bold text-red-500"><span>QOLDI:</span><span class="mono">${Core.format(x.salary - x.paid)}</span></div>
+                        </div>
+                        <button onclick="Hr.pay(${i})" class="w-full bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] hover:bg-blue-600">OYLIK TO'LASH</button>
+                    </div>`).join('');
+            },
+            pay: (i) => {
+                const w = DB.workers[i];
+                const s = parseFloat(prompt(`${w.name} uchun to'lov summasi:`));
+                if(s > 0 && s <= DB.kassa) {
+                    w.paid += s;
+                    DB.expenses.unshift({time: new Date().toLocaleTimeString(), note: `Oylik: ${w.name}`, amount: s});
+                    DB.kassa -= s;
+                    Core.save();
+                } else if(s > DB.kassa) alert("KASSADA PUL YETARLI EMAS!");
+            }
+        };
+
+        const Expenses = {
+            add: () => {
+                const n = document.getElementById('exp-note').value,
+                      a = parseFloat(document.getElementById('exp-amount').value);
+                if(a > 0 && a <= DB.kassa) {
+                    DB.expenses.unshift({time: new Date().toLocaleTimeString(), note: n, amount: a});
+                    DB.kassa -= a;
+                    document.getElementById('exp-note').value = "";
+                    document.getElementById('exp-amount').value = "";
+                    Core.save();
+                } else alert("MABLAG' YETARLI EMAS!");
+            },
+            render: () => {
+                const total = DB.expenses.reduce((a,b) => a + b.amount, 0);
+                document.getElementById('exp-total-day').innerText = "JAMI: " + Core.format(total);
+                document.getElementById('expenses-table').innerHTML = DB.expenses.map((x, i) => `
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-bold text-slate-400 mono">${x.time}</td>
+                        <td class="px-6 py-4 font-black">${x.note}</td>
+                        <td class="px-6 py-4 mono font-black text-red-500">-${Core.format(x.amount)}</td>
+                        <td class="px-6 py-4 text-right"><button onclick="DB.kassa+=${x.amount}; DB.expenses.splice(${i},1); Core.save()" class="text-slate-300">X</button></td>
+                    </tr>`).join('');
+            }
+        };
+
+        const Estimate = {
+            items: [],
+            add: () => {
+                const idx = document.getElementById('est-product').value;
+                const qty = parseFloat(document.getElementById('est-qty').value);
+                if(idx === "" || isNaN(qty)) return;
+                const p = DB.warehouse[idx];
+                const price = p.cost * 1.15; // 15% foyda bilan smeta
+                this.items.push({name: p.name, qty, price, total: price*qty});
+                Estimate.render();
+            },
+            render: () => {
+                let gt = 0;
+                document.getElementById('est-body').innerHTML = this.items.map(x => {
+                    gt += x.total;
+                    return `<tr><td class="px-6 py-4 font-black">${x.name}</td><td class="px-6 py-4 text-center mono">${x.qty} kg</td><td class="px-6 py-4 text-right mono">${Core.format(x.price)}</td><td class="px-6 py-4 text-right mono font-black">${Core.format(x.total)}</td></tr>`;
+                }).join('');
+                document.getElementById('est-total').innerText = Core.format(gt);
+                document.getElementById('smeta-date').innerText = new Date().toLocaleDateString();
+                document.getElementById('smeta-num').innerText = Math.floor(10000 + Math.random() * 90000);
+            },
+            clear: () => { this.items = []; Estimate.render(); }
+        };
+
+        const History = {
+            render: () => {
+                document.getElementById('history-list').innerHTML = DB.archive.map((x, i) => `
+                    <div class="glass-card p-6 flex justify-between items-center bg-white border-l-8 border-slate-900">
+                        <div class="flex items-center gap-10">
+                            <div class="text-center"><p class="text-[9px] font-black text-slate-400 uppercase">Sana</p><p class="text-lg font-black">${x.date}</p></div>
+                            <div><p class="text-[9px] font-black text-slate-400 uppercase">Kassa Yakuni</p><p class="font-black mono text-slate-900">${Core.format(x.kassa)}</p></div>
+                            <div><p class="text-[9px] font-black text-slate-400 uppercase">Kunlik Foyda</p><p class="font-black mono text-emerald-600">${Core.format(x.profit_total)}</p></div>
+                        </div>
+                        <button onclick="History.exportSingle(${i})" class="bg-slate-50 border px-6 py-3 rounded-xl font-black text-[10px] hover:bg-slate-100">EXCEL HISOBOT</button>
+                    </div>`).join('');
+            },
+            exportAll: () => {
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(DB.warehouse), "Ombor");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(DB.debts), "Nasiyalar");
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(DB.archive), "Arxiv");
+                XLSX.writeFile(wb, "SteelCenter_Master_DB.xlsx");
+            },
+            exportSingle: (idx) => {
+                const day = DB.archive[idx];
+                const ws = XLSX.utils.json_to_sheet(day.data.sales);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Savdolar");
+                XLSX.writeFile(wb, `Hisobot_${day.date}.xlsx`);
             }
         };
 
         const UI = {
-            switchView: function(id, el) {
-                document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.getElementById('v-' + id).classList.remove('hidden');
-                el.classList.add('active');
-                document.getElementById('view-title').innerText = el.innerText.trim();
-                window.scrollTo(0,0);
+            renderAlerts: () => {
+                const al = document.getElementById('stock-alerts');
+                al.innerHTML = "";
+                let count = 0;
+                DB.warehouse.forEach(x => {
+                    if(x.qty < 1000) {
+                        count++;
+                        al.innerHTML += `<div class="p-4 bg-white rounded-xl border-l-4 border-red-500 shadow-sm flex justify-between items-center">
+                            <div><p class="text-[9px] font-black text-slate-400 uppercase">${x.name}</p><p class="text-red-600 font-black text-sm">${x.qty.toFixed(1)} kg qoldi</p></div>
+                            <i class="fa-solid fa-triangle-exclamation text-red-100 text-xl"></i>
+                        </div>`;
+                    }
+                });
+                if(count === 0) al.innerHTML = `<div class="text-center py-20 text-slate-300 uppercase font-black text-[10px]"><i class="fa-solid fa-circle-check text-4xl mb-4 block text-emerald-100"></i>Hamma narsa yetarli</div>`;
             },
-            
-            filterTable: function(bodyId, query) {
-                const rows = document.getElementById(bodyId).getElementsByTagName('tr');
-                for (let row of rows) {
-                    row.style.display = row.innerText.toLowerCase().includes(query.toLowerCase()) ? "" : "none";
-                }
+            updateSelects: () => {
+                const ids = ['pos-product', 'debt-product', 'est-product'];
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    const val = el.value;
+                    el.innerHTML = '<option value="">Tanlang...</option>' + DB.warehouse.map((x, i) => `<option value="${i}">${x.name} (${x.qty.toFixed(1)} kg)</option>`).join('');
+                    el.value = val;
+                });
             },
-
-            initChart: function() {
+            initChart: () => {
                 const ctx = document.getElementById('mainChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'],
+                        labels: ['Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba','Yakshanba'],
                         datasets: [{
-                            label: 'Savdo Hajmi',
-                            data: [12, 19, 13, 15, 22, 30, 10],
-                            borderColor: '#2563eb',
+                            label: 'Savdo',
+                            data: [120, 190, 300, 500, 200, 300, 450],
+                            borderColor: '#3b82f6',
                             borderWidth: 4,
                             pointRadius: 6,
                             pointBackgroundColor: '#fff',
-                            pointBorderColor: '#2563eb',
                             tension: 0.4,
                             fill: true,
-                            backgroundColor: 'rgba(37, 99, 235, 0.05)'
+                            backgroundColor: 'rgba(59, 130, 246, 0.05)'
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { display: false },
-                            x: { grid: { display: false } }
-                        }
-                    }
+                    options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
                 });
             }
         };
 
-        // Initialize
+        const View = {
+            switch: (id, el) => {
+                document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+                document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+                document.getElementById('v-' + id).classList.remove('hidden');
+                el.classList.add('active');
+                document.getElementById('page-title').innerText = el.innerText.trim();
+            }
+        };
+
+        const Table = {
+            filter: (id, q) => {
+                const rows = document.getElementById(id).getElementsByTagName('tr');
+                for(let r of rows) r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? "" : "none";
+            }
+        };
+
+        const Settings = {
+            updatePin: () => {
+                const p = document.getElementById('set-pin').value;
+                if(p.length === 4) { DB.pin = p; Core.save(); alert("PIN yangilandi!"); }
+            },
+            downloadBackup: () => {
+                const blob = new Blob([JSON.stringify(DB)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = `Steel_Backup_${new Date().toLocaleDateString()}.json`;
+                a.click();
+            },
+            factoryReset: () => {
+                if(confirm("DIQQAT! HAMMA NARSANI O'CHIRISH?")) { localStorage.clear(); location.reload(); }
+            }
+        };
+
+        // RUN
         setInterval(() => {
-            document.getElementById('digital-clock').innerText = new Date().toLocaleTimeString();
+            document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
+            document.getElementById('live-date').innerText = new Date().toLocaleDateString('uz-UZ', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
         }, 1000);
 
-        window.onload = () => Engine.load();
+        window.onload = Core.load;
     </script>
 </body>
 </html>
