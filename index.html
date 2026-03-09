@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>STEEL CENTER ERP v28.0 | ULTIMATE ENTERPRISE SYSTEM</title>
+   <title>STEEL CENTER PRODUCT | ULTIMATE ENTERPRISE SYSTEM</title>
    
    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -197,7 +197,7 @@
  
    <aside class="sidebar">
        <div class="logo-section">
-           <h1>STEEL CENTER</h1>
+           <h1>STEEL CENTER PRODUCT</h1>
            <p>Industrial ERP Solution</p>
        </div>
        
@@ -670,36 +670,51 @@
            },
  
            // --- NASIYA ---
-           addNasiya: function() {
-               const client = document.getElementById('n-client-name').value.trim();
-               const idx = document.getElementById('n-product-list').value;
-               const qty = parseFloat(document.getElementById('n-qty').value);
-               const amount = parseFloat(document.getElementById('n-amount').value);
+          addNasiya: function() {
+    const client = document.getElementById('n-client-name').value.trim();
+    const idx = document.getElementById('n-product-list').value;
+    const amount = parseFloat(document.getElementById('n-amount').value);
+
+    if(!client || idx === "" || isNaN(amount) || amount <= 0) return alert("Nasiya ma'lumotlari xato!");
+
+    const p = DB.warehouse[idx];
+    // Miqdorni kamaytirmaymiz chunki qarz pul asosida
+    if(p.qty <= 0) return alert("Omborda mahsulot yo'q!");
+
+    DB.nasiya.unshift({
+        client,
+        product: p.name,
+        amount,
+        paid: false,
+        date: new Date().toLocaleDateString()
+    });
+
+    this.log("Nasiya", `${client} ga ${p.name} uchun nasiyaga berildi: ${amount}`);
+    ['n-client-name', 'n-amount'].forEach(id => document.getElementById(id).value = '');
+    this.save();
+},
+
+
+// Engine.payNasiya() ni yangilash:
+payNasiya: function(idx) {
+    const n = DB.nasiya[idx];
+    if(n.paid) return alert("Ushbu qarz allaqachon yopilgan!");
+
+    DB.kassa += n.amount;
+    n.paid = true;
+    this.log("Nasiya Yopish", `${n.client} qarzini to'ldi: ${n.amount}`);
+    this.save();
+},
  
-               if(!client || idx==="" || isNaN(amount)) return alert("Nasiya ma'lumotlari xato!");
-               
-               const p = DB.warehouse[idx];
-               if(p.qty < qty) return alert("Omborda yuk kam!");
- 
-               DB.nasiya.unshift({
-                   client, product: p.name, qty, amount,
-                   date: new Date().toLocaleDateString(),
-                   paid: false
-               });
- 
-               p.qty -= qty;
-               this.log("Nasiya", `${client}ga ${p.name} nasiyaga berildi: ${amount}`);
-               ['n-client-name', 'n-qty', 'n-amount'].forEach(id => document.getElementById(id).value = '');
-               this.save();
-           },
- 
-           payNasiya: function(idx) {
-               const n = DB.nasiya[idx];
-               DB.kassa += n.amount;
-               n.paid = true;
-               this.log("Nasiya Yopish", `${n.client} qarzini to'ladi: ${n.amount}`);
-               this.save();
-           },
+          payNasiya: function(idx) {
+    const n = DB.nasiya[idx];
+    if(n.paid) return alert("Ushbu qarz allaqachon yopilgan!");
+
+    DB.kassa += n.amount;
+    n.paid = true;
+    this.log("Nasiya Yopish", `${n.client} qarzini to'ldi: ${n.amount}`);
+    this.save();
+},
  
            // --- FIRM DEBTS ---
            addFirmDebt: function() {
@@ -801,28 +816,28 @@ paySalary: function(idx) {
 closeWorkDay: function() {
     if (!confirm("KUNNI YOPISH: Barcha savdolar arxivlanadi va Excel yuklanadi. Tasdiqlaysizmi?")) return;
 
-    const dayProfit = DB.sales.reduce((a, b) => a + b.profit, 0);
+ const dayProfit = DB.sales.reduce((a, b) => a + b.profit, 0);
 
     const daySummary = {
         date: new Date().toLocaleDateString(),
         kassa: DB.kassa,
         profit: dayProfit,
         salesCount: DB.sales.length,
-        sales: [...DB.sales],               // sotilgan mahsulotlar: kim qancha nima sotgani
-        costs: [...DB.costs],               // kunlik chiqimlar
-        workersPaid: DB.workers.map(w => ({ // ishchilarga berilganlar
+        sales: [...DB.sales],
+        costs: [...DB.costs],
+        workersPaid: DB.workers.map(w => ({
             name: w.name,
             salary: w.salary,
             paid: w.paid
         })),
-        nasiya: DB.nasiya.filter(n => !n.paid).map(n => ({  // mijoz qarzlari faqat yopilmaganlari
+        nasiya: DB.nasiya.map(n => ({
             date: n.date,
             client: n.client,
             product: n.product,
             amount: n.amount,
             paid: n.paid
         })),
-        firmDebts: DB.firmDebts.map(d => ({  // firma qarzlari
+        firmDebts: DB.firmDebts.map(d => ({
             date: d.date,
             firm: d.firm,
             item: d.item,
@@ -830,26 +845,23 @@ closeWorkDay: function() {
             paid: d.paid,
             status: d.status
         })),
-        warehouse: DB.warehouse.map(w => ({ // ombordagi qolgan mahsulotlar
+        warehouse: DB.warehouse.map(w => ({
             name: w.name,
             qty: w.qty,
             cost: w.cost
         }))
     };
 
-    // Excelga kunlik hisobotni eksport qilamiz
     this.exportExcel(daySummary, `SteelCenter_Report_${daySummary.date.replace(/\//g, '-')}.xlsx`);
 
-    // Arxivga saqlaymiz
     DB.archive.unshift(daySummary);
 
-    // Kunlik ma'lumotlarni tozalaymiz
     DB.sales = [];
     DB.costs = [];
-    DB.nasiya = DB.nasiya.filter(n => n.paid); // faqat yopilgan qarzlar qolsin
-    DB.workers.forEach(w => w.paid = 0);        // ishchi maoshlar bo‘shatiladi
+    // DB.nasiya ni o'chirmaymiz, qarzdorlar qoladi!
+    DB.workers.forEach(w => w.paid = 0);
 
-    this.log("Tizim", "Ish kuni yopildi va to‘liq arxivlandi");
+    this.log("Tizim", "Ish kuni yopildi va to'liq arxivlandi");
     this.save();
     alert("KUN MUVAFFAQIYATLI YOPILDI VA EXCELGA SAQLANDI!");
 },
