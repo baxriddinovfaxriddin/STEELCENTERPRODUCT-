@@ -1137,5 +1137,47 @@ exportFullArchive: function() {
        });
  
    </script>
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Siz taqdim etgan sozlamalar
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVJAmJDrkxZ77876aAvJ0D-m0sN1Ov6PY",
+    authDomain: "steel-center-erp.firebaseapp.com",
+    databaseURL: "https://steel-center-erp-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "steel-center-erp",
+    storageBucket: "steel-center-erp.firebasestorage.app",
+    messagingSenderId: "841823626213",
+    appId: "1:841823626213:web:28d5618fd738c90c00850c",
+    measurementId: "G-EQVJWTBB7Z"
+  };
+
+  // Firebase-ni ishga tushirish
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // 1. Ma'lumot qo'shish funksiyasi (Masalan: Sotuv yoki Harajat)
+  async function ma'lumotSaqlash(turi, summa, izoh) {
+    try {
+      const docRef = await addDoc(collection(db, "hisobotlar"), {
+        turi: turi,
+        summa: Number(summa),
+        izoh: izoh,
+        sana: new Date().toLocaleString("uz-UZ"),
+        timestamp: new Date()
+      });
+      alert("Ma'lumot muvaffaqiyatli saqlandi!");
+      location.reload(); // Sahifani yangilash
+    } catch (e) {
+      console.error("Xatolik yuz berdi: ", e);
+      alert("Xatolik: " + e.message);
+    }
+  }
+
+  // Funksiyalarni tugmalar ishlatishi uchun global qilish
+  window.ma'lumotSaqlash = ma'lumotSaqlash;
+
+</script>
 </body>
 </html>
