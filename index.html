@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>STEEL CENTER PRODUCT | UZB </title>
+   <title>STEEL CENTER ERP v28.0 | ULTIMATE ENTERPRISE SYSTEM</title>
    
    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -493,6 +493,9 @@
  
            <div id="v-archive" class="view hidden">
                <div class="content-header"><h2>Hisobotlar Arxivi</h2><p>Yopilgan kunlar bo'yicha statistik ma'lumotlar.</p></div>
+               <button class="btn btn-primary" onclick="Engine.exportFullArchive()" style="margin-bottom: 15px;">
+    📥 Barcha arxivni Excelga yuklash
+</button>
                <div id="archive-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px;">
                    </div>
            </div>
@@ -795,52 +798,134 @@ paySalary: function(idx) {
                }).join('');
                document.getElementById('calc-grand-total').innerText = "UMUMIY: " + this.format(gt);
            },
- // Kodning "closeWorkDay" va "exportExcel", hamda yangi "exportFullArchive" funksiyalari:
-
 closeWorkDay: function() {
-    if(!confirm("KUNNI YOPISH: Barcha savdolar arxivlanadi va Excel yuklanadi. Tasdiqlaysizmi?")) return;
+    if (!confirm("KUNNI YOPISH: Barcha savdolar arxivlanadi va Excel yuklanadi. Tasdiqlaysizmi?")) return;
 
-    const dayProfit = DB.sales.reduce((a,b) => a + b.profit, 0);
+    const dayProfit = DB.sales.reduce((a, b) => a + b.profit, 0);
+
     const daySummary = {
         date: new Date().toLocaleDateString(),
         kassa: DB.kassa,
         profit: dayProfit,
         salesCount: DB.sales.length,
-        sales: [...DB.sales],
-        costs: [...DB.costs]
+        sales: [...DB.sales],               // sotilgan mahsulotlar: kim qancha nima sotgani
+        costs: [...DB.costs],               // kunlik chiqimlar
+        workersPaid: DB.workers.map(w => ({ // ishchilarga berilganlar
+            name: w.name,
+            salary: w.salary,
+            paid: w.paid
+        })),
+        nasiya: DB.nasiya.filter(n => !n.paid).map(n => ({  // mijoz qarzlari faqat yopilmaganlari
+            date: n.date,
+            client: n.client,
+            product: n.product,
+            amount: n.amount,
+            paid: n.paid
+        })),
+        firmDebts: DB.firmDebts.map(d => ({  // firma qarzlari
+            date: d.date,
+            firm: d.firm,
+            item: d.item,
+            total: d.total,
+            paid: d.paid,
+            status: d.status
+        })),
+        warehouse: DB.warehouse.map(w => ({ // ombordagi qolgan mahsulotlar
+            name: w.name,
+            qty: w.qty,
+            cost: w.cost
+        }))
     };
 
-    this.exportExcel(daySummary, `SteelCenter_Report_${daySummary.date.replace(/\//g,'-')}.xlsx`);
+    // Excelga kunlik hisobotni eksport qilamiz
+    this.exportExcel(daySummary, `SteelCenter_Report_${daySummary.date.replace(/\//g, '-')}.xlsx`);
 
+    // Arxivga saqlaymiz
     DB.archive.unshift(daySummary);
+
+    // Kunlik ma'lumotlarni tozalaymiz
     DB.sales = [];
     DB.costs = [];
-    this.log("Tizim", "Ish kuni yopildi va arxivlandi");
-    this.save();
-    alert("Muvaffaqiyatli yakunlandi!");
-},
+    DB.nasiya = DB.nasiya.filter(n => n.paid); // faqat yopilgan qarzlar qolsin
+    DB.workers.forEach(w => w.paid = 0);        // ishchi maoshlar bo‘shatiladi
 
-exportExcel: function(data, filename = `SteelCenter_Report_${data.date.replace(/\//g,'-')}.xlsx`) {
+    this.log("Tizim", "Ish kuni yopildi va to‘liq arxivlandi");
+    this.save();
+    alert("KUN MUVAFFAQIYATLI YOPILDI VA EXCELGA SAQLANDI!");
+},
+exportExcel: function(data, filename = `SteelCenter_Report_${data.date.replace(/\//g, '-')}.xlsx`) {
     const wb = XLSX.utils.book_new();
 
+    // Sotuvlar (kim qancha nima sotgani)
     const wsSales = XLSX.utils.json_to_sheet(data.sales.map(s => ({
-        "Vaqt": s.time, "Mahsulot": s.name, "Vazn": s.qty, "Summa": s.total, "Foyda": s.profit
+        "Vaqt": s.time,
+        "Mahsulot": s.name,
+        "Vazn": s.qty,
+        "Summa": s.total,
+        "Foyda": s.profit
     })));
     XLSX.utils.book_append_sheet(wb, wsSales, "Sotuvlar");
 
+    // Chiqimlar
     const wsCosts = XLSX.utils.json_to_sheet(data.costs.map(c => ({
-        "Vaqt": c.date, "Izoh": c.note, "Summa": c.amount
+        "Vaqt": c.date,
+        "Izoh": c.note,
+        "Summa": c.amount
     })));
     XLSX.utils.book_append_sheet(wb, wsCosts, "Chiqimlar");
 
+    // Ishchilarga berilgan pullar
+    const wsWorkers = XLSX.utils.json_to_sheet(data.workersPaid.map(w => ({
+        "Xodim": w.name,
+        "Oylik": w.salary,
+        "Berildi": w.paid,
+        "Qolgan": w.salary - w.paid
+    })));
+    XLSX.utils.book_append_sheet(wb, wsWorkers, "Ishchilar Maosh");
+
+    // Mijoz qarzlari (nasiyalar)
+    const wsNasiya = XLSX.utils.json_to_sheet(data.nasiya.map(n => ({
+        "Sana": n.date,
+        "Mijoz": n.client,
+        "Mahsulot": n.product,
+        "Summa": n.amount,
+        "Holat": n.paid ? "Yopilgan" : "Qarzdor"
+    })));
+    XLSX.utils.book_append_sheet(wb, wsNasiya, "Mijoz Qarzi");
+
+    // Firma qarzlari
+    const wsFirmDebts = XLSX.utils.json_to_sheet(data.firmDebts.map(d => ({
+        "Sana": d.date,
+        "Firma": d.firm,
+        "Mahsulot": d.item,
+        "Jami": d.total,
+        "To'landi": d.paid,
+        "Qoldi": d.total - d.paid,
+        "Holat": d.status
+    })));
+    XLSX.utils.book_append_sheet(wb, wsFirmDebts, "Firma Qarzi");
+
+    // Ombordagi mahsulotlar
+    const wsWarehouse = XLSX.utils.json_to_sheet(data.warehouse.map(w => ({
+        "Mahsulot": w.name,
+        "Miqdor (kg)": w.qty,
+        "Tannarx (1 kg)": w.cost,
+        "Jami Qiymat": w.qty * w.cost
+    })));
+    XLSX.utils.book_append_sheet(wb, wsWarehouse, "Ombor");
+
+    // Kun yakuni umumiy ma’lumot
     const wsFinal = XLSX.utils.json_to_sheet([{
-        "Sana": data.date, "Kassa Yakuni": data.kassa, "Kunlik Foyda": data.profit, "Sotuvlar Soni": data.salesCount
+        "Sana": data.date,
+        "Kassa Yakuni": data.kassa,
+        "Kunlik Foyda": data.profit,
+        "Sotuvlar Soni": data.salesCount
     }]);
     XLSX.utils.book_append_sheet(wb, wsFinal, "Kun Yakuni");
 
+    // Faylni eksport qilish
     XLSX.writeFile(wb, filename);
 },
-
 exportFullArchive: function() {
     if(DB.archive.length === 0) {
         alert('Arxiv bo\'sh!');
@@ -850,24 +935,77 @@ exportFullArchive: function() {
     const wb = XLSX.utils.book_new();
 
     DB.archive.forEach((day, idx) => {
-        const wsSales = XLSX.utils.json_to_sheet(day.sales.map(s=>({
-            "Vaqt": s.time, "Mahsulot": s.name, "Vazn": s.qty, "Summa": s.total, "Foyda": s.profit
+        // Sotuvlar varaqasi
+        const wsSales = XLSX.utils.json_to_sheet(day.sales.map(s => ({
+            "Vaqt": s.time,
+            "Mahsulot": s.name,
+            "Vazn": s.qty,
+            "Summa": s.total,
+            "Foyda": s.profit
         })));
         XLSX.utils.book_append_sheet(wb, wsSales, `Sotuvlar_${idx+1}`);
 
-        const wsCosts = XLSX.utils.json_to_sheet(day.costs.map(c=>({
-            "Vaqt": c.date, "Izoh": c.note, "Summa": c.amount
+        // Chiqimlar varaqasi
+        const wsCosts = XLSX.utils.json_to_sheet(day.costs.map(c => ({
+            "Vaqt": c.date,
+            "Izoh": c.note,
+            "Summa": c.amount
         })));
         XLSX.utils.book_append_sheet(wb, wsCosts, `Chiqimlar_${idx+1}`);
 
+        // Ishchilar oyliklari
+        const wsWorkers = XLSX.utils.json_to_sheet(day.workersPaid.map(w => ({
+            "Xodim": w.name,
+            "Oylik": w.salary,
+            "Berildi": w.paid,
+            "Qolgan": w.salary - w.paid
+        })));
+        XLSX.utils.book_append_sheet(wb, wsWorkers, `Ishchilar_${idx+1}`);
+
+        // Mijoz nasiyalari
+        const wsNasiya = XLSX.utils.json_to_sheet(day.nasiya.map(n => ({
+            "Sana": n.date,
+            "Mijoz": n.client,
+            "Mahsulot": n.product,
+            "Summa": n.amount,
+            "Holat": n.paid ? "Yopilgan" : "Qarzdor"
+        })));
+        XLSX.utils.book_append_sheet(wb, wsNasiya, `Nasiyalar_${idx+1}`);
+
+        // Firma qarzlari
+        const wsFirmDebts = XLSX.utils.json_to_sheet(day.firmDebts.map(d => ({
+            "Sana": d.date,
+            "Firma": d.firm,
+            "Mahsulot": d.item,
+            "Jami": d.total,
+            "To'landi": d.paid,
+            "Qoldi": d.total - d.paid,
+            "Holat": d.status
+        })));
+        XLSX.utils.book_append_sheet(wb, wsFirmDebts, `FirmaQarz_${idx+1}`);
+
+        // Ombor
+        const wsWarehouse = XLSX.utils.json_to_sheet(day.warehouse.map(w => ({
+            "Mahsulot": w.name,
+            "Miqdor (kg)": w.qty,
+            "Tannarx (1kg)": w.cost,
+            "Jami Qiymat": w.qty * w.cost
+        })));
+        XLSX.utils.book_append_sheet(wb, wsWarehouse, `Ombor_${idx+1}`);
+
+        // Kun yakuni
         const wsFinal = XLSX.utils.json_to_sheet([{
-            "Sana": day.date, "Kassa Yakuni": day.kassa, "Kunlik Foyda": day.profit, "Sotuvlar Soni": day.salesCount
+            "Sana": day.date,
+            "Kassa Yakuni": day.kassa,
+            "Kunlik Foyda": day.profit,
+            "Sotuvlar Soni": day.salesCount
         }]);
         XLSX.utils.book_append_sheet(wb, wsFinal, `Yakun_${idx+1}`);
     });
 
     XLSX.writeFile(wb, `SteelCenter_All_Archive.xlsx`);
 },
+
            // --- REFRESH UI ---
            refreshUI: function() {
                // Dashboard stats
