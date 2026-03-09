@@ -1130,17 +1130,11 @@ exportFullArchive: function() {
                grid.innerHTML = DB.archive.map(a => `<div class="stat-card"><h4>📅 ${a.date}</h4><hr class="mt-4 mb-4"><p>Kassa: ${Engine.format(a.kassa)}</p><p style="color:green">Foyda: ${Engine.format(a.profit)}</p></div>`).join('');
            }
        };
- 
-       // Window Event for PIN Input (Auto-login on Enter)
-       document.getElementById('sys-pin').addEventListener('keypress', (e) => {
-           if(e.key === 'Enter') Engine.authenticate();
-       });
- 
 <script type="module">
-  // Firebase modullarini yuklash
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+  // Sizning Firebase konfiguratsiyangiz
   const firebaseConfig = {
     apiKey: "AIzaSyAVJAmJDrkxZ77876aAvJ0D-m0sN1Ov6PY",
     authDomain: "steel-center-erp.firebaseapp.com",
@@ -1148,41 +1142,43 @@ exportFullArchive: function() {
     projectId: "steel-center-erp",
     storageBucket: "steel-center-erp.firebasestorage.app",
     messagingSenderId: "841823626213",
-    appId: "1:841823626213:web:1b2adc4918cc5a4800850c",
-    measurementId: "G-QY74YC99B6"
+    appId: "1:841823626213:web:28d5618fd738c90c00850c",
+    measurementId: "G-EQVJWTBB7Z"
   };
 
+  // Firebase-ni ishga tushirish
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // MA'LUMOTLARNI HAMMA QURILMALARDA KO'RSATISH
-  const q = query(collection(db, "hisoblar"), orderBy("timestamp", "desc"));
-  onSnapshot(q, (snapshot) => {
-      const listElement = document.getElementById("malumotlar-ruyxati");
-      if (listElement) {
-          listElement.innerHTML = ""; 
-          snapshot.forEach((doc) => {
-              const data = doc.data();
-              listElement.innerHTML += <li>${data.izoh}: ${data.summa} so'm</li>;
-          });
-      }
-  });
-
-  // MA'LUMOT QO'SHISH FUNKSIYASI
+  // Ma'lumot yozish funksiyasi
   window.saqlash = async function() {
-      const izoh = document.getElementById('inputIzoh').value;
-      const summa = document.getElementById('inputSumma').value;
+    const izoh = document.getElementById('inputIzoh').value;
+    const summa = document.getElementById('inputSumma').value;
 
-      try {
-          await addDoc(collection(db, "hisoblar"), {
-              izoh: izoh,
-              summa: Number(summa),
-              timestamp: serverTimestamp()
-          });
-          alert("Saqlandi!");
-      } catch (e) {
-          console.error("Xatolik:", e);
-      }
+    if(izoh == "" || summa == "") {
+      alert("Iltimos, hamma joyni to'ldiring!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "hisobotlar"), {
+        nomi: izoh,
+        miqdori: Number(summa),
+        vaqti: new Date().toLocaleString("uz-UZ")
+      });
+      alert("Muvaffaqiyatli saqlandi!");
+      document.getElementById('inputIzoh').value = "";
+      document.getElementById('inputSumma').value = "";
+    } catch (e) {
+      alert("Xatolik: " + e.message);
+    }
   }
+</script>
+
+<div style="text-align: center; margin-top: 50px;">
+    <input type="text" id="inputIzoh" placeholder="Nima uchun?">
+    <input type="number" id="inputSumma" placeholder="Summa">
+    <button onclick="saqlash()">Bazaga yozish</button>
+</div>
 </body>
 </html>
