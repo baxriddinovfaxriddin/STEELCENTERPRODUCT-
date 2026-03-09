@@ -1130,6 +1130,61 @@ exportFullArchive: function() {
                grid.innerHTML = DB.archive.map(a => `<div class="stat-card"><h4>📅 ${a.date}</h4><hr class="mt-4 mb-4"><p>Kassa: ${Engine.format(a.kassa)}</p><p style="color:green">Foyda: ${Engine.format(a.profit)}</p></div>`).join('');
            }
        };
-<script>
+ 
+       // Window Event for PIN Input (Auto-login on Enter)
+       document.getElementById('sys-pin').addEventListener('keypress', (e) => {
+           if(e.key === 'Enter') Engine.authenticate();
+       });
+ 
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Sizning Firebase konfiguratsiyangiz
+  const firebaseConfig = {
+    apiKey: "AIzaSyAVJAmJDrkxZ77876aAvJ0D-m0sN1Ov6PY",
+    authDomain: "steel-center-erp.firebaseapp.com",
+    databaseURL: "https://steel-center-erp-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "steel-center-erp",
+    storageBucket: "steel-center-erp.firebasestorage.app",
+    messagingSenderId: "841823626213",
+    appId: "1:841823626213:web:28d5618fd738c90c00850c",
+    measurementId: "G-EQVJWTBB7Z"
+  };
+
+  // Firebase-ni ishga tushirish
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Ma'lumot yozish funksiyasi
+  window.saqlash = async function() {
+    const izoh = document.getElementById('inputIzoh').value;
+    const summa = document.getElementById('inputSumma').value;
+
+    if(izoh == "" || summa == "") {
+      alert("Iltimos, hamma joyni to'ldiring!");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "hisobotlar"), {
+        nomi: izoh,
+        miqdori: Number(summa),
+        vaqti: new Date().toLocaleString("uz-UZ")
+      });
+      alert("Muvaffaqiyatli saqlandi!");
+      document.getElementById('inputIzoh').value = "";
+      document.getElementById('inputSumma').value = "";
+    } catch (e) {
+      alert("Xatolik: " + e.message);
+    }
+  }
+</script>
+
+<div style="text-align: center; margin-top: 50px;">
+    <input type="text" id="inputIzoh" placeholder="Nima uchun?">
+    <input type="number" id="inputSumma" placeholder="Summa">
+    <button onclick="saqlash()">Bazaga yozish</button>
+</div>
 </body>
 </html>
