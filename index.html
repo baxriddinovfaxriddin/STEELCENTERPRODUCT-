@@ -1137,47 +1137,55 @@ exportFullArchive: function() {
        });
  
    </script>
-   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  // Firebase modullarini import qilish
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // Siz taqdim etgan sozlamalar
-  const firebaseConfig = {
-    apiKey: "AIzaSyAVJAmJDrkxZ77876aAvJ0D-m0sN1Ov6PY",
-    authDomain: "steel-center-erp.firebaseapp.com",
-    databaseURL: "https://steel-center-erp-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "steel-center-erp",
-    storageBucket: "steel-center-erp.firebasestorage.app",
-    messagingSenderId: "841823626213",
-    appId: "1:841823626213:web:28d5618fd738c90c00850c",
-    measurementId: "G-EQVJWTBB7Z"
-  };
+// Sizning Firebase konfiguratsiyangiz
+const firebaseConfig = {
+  apiKey: "AIzaSyAVJAmJDrkxZ77876aAvJ0D-m0sN1Ov6PY",
+  authDomain: "steel-center-erp.firebaseapp.com",
+  databaseURL: "https://steel-center-erp-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "steel-center-erp",
+  storageBucket: "steel-center-erp.firebasestorage.app",
+  messagingSenderId: "841823626213",
+  appId: "1:841823626213:web:1b2adc4918cc5a4800850c",
+  measurementId: "G-QY74YC99B6"
+};
 
-  // Firebase-ni ishga tushirish
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+// Firebase-ni ishga tushirish
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  // 1. Ma'lumot qo'shish funksiyasi (Masalan: Sotuv yoki Harajat)
-  async function ma'lumotSaqlash(turi, summa, izoh) {
-    try {
-      const docRef = await addDoc(collection(db, "hisobotlar"), {
-        turi: turi,
-        summa: Number(summa),
-        izoh: izoh,
-        sana: new Date().toLocaleString("uz-UZ"),
-        timestamp: new Date()
-      });
-      alert("Ma'lumot muvaffaqiyatli saqlandi!");
-      location.reload(); // Sahifani yangilash
-    } catch (e) {
-      console.error("Xatolik yuz berdi: ", e);
-      alert("Xatolik: " + e.message);
+// 1. MA'LUMOTLARNI HAMMA QURILMALARDA KO'RSATISH (REAL-TIME)
+const q = query(collection(db, "hisoblar"), orderBy("timestamp", "desc"));
+
+onSnapshot(q, (snapshot) => {
+    const listElement = document.getElementById("malumotlar-ruyxati");
+    if (listElement) {
+        listElement.innerHTML = ""; // Oldingi ma'lumotni tozalash
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            listElement.innerHTML += <li>${data.izoh}: ${data.summa} so'm</li>;
+        });
     }
-  }
+});
 
-  // Funksiyalarni tugmalar ishlatishi uchun global qilish
-  window.ma'lumotSaqlash = ma'lumotSaqlash;
+// 2. MA'LUMOT QO'SHISH FUNKSIYASI
+window.saqlash = async function() {
+    const izoh = document.getElementById('inputIzoh').value;
+    const summa = document.getElementById('inputSumma').value;
 
-</script>
+    try {
+        await addDoc(collection(db, "hisoblar"), {
+            izoh: izoh,
+            summa: Number(summa),
+            timestamp: serverTimestamp() // Bu yillar davomida tartib bilan saqlashni ta'minlaydi
+        });
+        alert("Saqlandi!");
+    } catch (e) {
+        console.error("Xatolik:", e);
+    }
+}
 </body>
 </html>
