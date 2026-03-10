@@ -859,8 +859,6 @@ closeWorkDay: function() {
     DB.sales = [];
     DB.costs = [];
     // DB.nasiya ni o'chirmaymiz, qarzdorlar qoladi!
-    DB.workers.forEach(w => w.paid = 0);
-
     this.log("Tizim", "Ish kuni yopildi va to'liq arxivlandi");
     this.save();
     alert("KUN MUVAFFAQIYATLI YOPILDI VA EXCELGA SAQLANDI!");
