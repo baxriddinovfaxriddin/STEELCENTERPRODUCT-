@@ -946,78 +946,94 @@ exportFullArchive: function() {
 
     const wb = XLSX.utils.book_new();
 
-    DB.archive.forEach((day, idx) => {
-        // Sotuvlar varaqasi
-        const wsSales = XLSX.utils.json_to_sheet(day.sales.map(s => ({
-            "Vaqt": s.time,
-            "Mahsulot": s.name,
-            "Vazn": s.qty,
-            "Summa": s.total,
-            "Foyda": s.profit
-        })));
-        XLSX.utils.book_append_sheet(wb, wsSales, `Sotuvlar_${idx+1}`);
+    // Barcha kunlar bo'yicha jami ma'lumotlarni bitta listda to'plash uchun arraylar
+    const allSales = [];
+    const allCosts = [];
+    const allWorkers = [];
+    const allNasiya = [];
+    const allFirmDebts = [];
+    const allWarehouse = [];
 
-        // Chiqimlar varaqasi
-        const wsCosts = XLSX.utils.json_to_sheet(day.costs.map(c => ({
-            "Vaqt": c.date,
-            "Izoh": c.note,
-            "Summa": c.amount
-        })));
-        XLSX.utils.book_append_sheet(wb, wsCosts, `Chiqimlar_${idx+1}`);
-
-        // Ishchilar oyliklari
-        const wsWorkers = XLSX.utils.json_to_sheet(day.workersPaid.map(w => ({
-            "Xodim": w.name,
-            "Oylik": w.salary,
-            "Berildi": w.paid,
-            "Qolgan": w.salary - w.paid
-        })));
-        XLSX.utils.book_append_sheet(wb, wsWorkers, `Ishchilar_${idx+1}`);
-
-        // Mijoz nasiyalari
-        const wsNasiya = XLSX.utils.json_to_sheet(day.nasiya.map(n => ({
-            "Sana": n.date,
-            "Mijoz": n.client,
-            "Mahsulot": n.product,
-            "Summa": n.amount,
-            "Holat": n.paid ? "Yopilgan" : "Qarzdor"
-        })));
-        XLSX.utils.book_append_sheet(wb, wsNasiya, `Nasiyalar_${idx+1}`);
-
-        // Firma qarzlari
-        const wsFirmDebts = XLSX.utils.json_to_sheet(day.firmDebts.map(d => ({
-            "Sana": d.date,
-            "Firma": d.firm,
-            "Mahsulot": d.item,
-            "Jami": d.total,
-            "To'landi": d.paid,
-            "Qoldi": d.total - d.paid,
-            "Holat": d.status
-        })));
-        XLSX.utils.book_append_sheet(wb, wsFirmDebts, `FirmaQarz_${idx+1}`);
-
-        // Ombor
-        const wsWarehouse = XLSX.utils.json_to_sheet(day.warehouse.map(w => ({
-            "Mahsulot": w.name,
-            "Miqdor (kg)": w.qty,
-            "Tannarx (1kg)": w.cost,
-            "Jami Qiymat": w.qty * w.cost
-        })));
-        XLSX.utils.book_append_sheet(wb, wsWarehouse, `Ombor_${idx+1}`);
-
-        // Kun yakuni
-        const wsFinal = XLSX.utils.json_to_sheet([{
-            "Sana": day.date,
-            "Kassa Yakuni": day.kassa,
-            "Kunlik Foyda": day.profit,
-            "Sotuvlar Soni": day.salesCount
-        }]);
-        XLSX.utils.book_append_sheet(wb, wsFinal, `Yakun_${idx+1}`);
+    DB.archive.forEach(day => {
+        day.sales.forEach(s => {
+            allSales.push({
+                "Sana": day.date,
+                "Vaqt": s.time,
+                "Mahsulot": s.name,
+                "Vazn": s.qty,
+                "Summa": s.total,
+                "Foyda": s.profit
+            });
+        });
+        day.costs.forEach(c => {
+            allCosts.push({
+                "Sana": day.date,
+                "Vaqt": c.date,
+                "Izoh": c.note,
+                "Summa": c.amount
+            });
+        });
+        day.workersPaid.forEach(w => {
+            allWorkers.push({
+                "Sana": day.date,
+                "Xodim": w.name,
+                "Oylik": w.salary,
+                "Berildi": w.paid,
+                "Qolgan": w.salary - w.paid
+            });
+        });
+        day.nasiya.forEach(n => {
+            allNasiya.push({
+                "Sana": n.date,
+                "Mijoz": n.client,
+                "Mahsulot": n.product,
+                "Summa": n.amount,
+                "Holat": n.paid ? "Yopilgan" : "Qarzdor"
+            });
+        });
+        day.firmDebts.forEach(d => {
+            allFirmDebts.push({
+                "Sana": d.date,
+                "Firma": d.firm,
+                "Mahsulot": d.item,
+                "Jami": d.total,
+                "To'landi": d.paid,
+                "Qoldi": d.total - d.paid,
+                "Holat": d.status
+            });
+        });
+        day.warehouse.forEach(w => {
+            allWarehouse.push({
+                "Sana": day.date,
+                "Mahsulot": w.name,
+                "Miqdor (kg)": w.qty,
+                "Tannarx (1kg)": w.cost,
+                "Jami Qiymat": w.qty * w.cost
+            });
+        });
     });
+
+    // Har bir bitta varaq yaratiladi
+    const wsSales = XLSX.utils.json_to_sheet(allSales);
+    XLSX.utils.book_append_sheet(wb, wsSales, "Sotuvlar");
+
+    const wsCosts = XLSX.utils.json_to_sheet(allCosts);
+    XLSX.utils.book_append_sheet(wb, wsCosts, "Chiqimlar");
+
+    const wsWorkers = XLSX.utils.json_to_sheet(allWorkers);
+    XLSX.utils.book_append_sheet(wb, wsWorkers, "Ishchilar Maosh");
+
+    const wsNasiya = XLSX.utils.json_to_sheet(allNasiya);
+    XLSX.utils.book_append_sheet(wb, wsNasiya, "Mijoz Qarzi");
+
+    const wsFirmDebts = XLSX.utils.json_to_sheet(allFirmDebts);
+    XLSX.utils.book_append_sheet(wb, wsFirmDebts, "Firma Qarzi");
+
+    const wsWarehouse = XLSX.utils.json_to_sheet(allWarehouse);
+    XLSX.utils.book_append_sheet(wb, wsWarehouse, "Ombor");
 
     XLSX.writeFile(wb, `SteelCenter_All_Archive.xlsx`);
 },
-
            // --- REFRESH UI ---
            refreshUI: function() {
                // Dashboard stats
